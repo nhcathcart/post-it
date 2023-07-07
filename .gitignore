@@ -1,0 +1,39 @@
+# Ignore Node.js related files
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Ignore Express backend build output
+/build/
+
+# Ignore React frontend build output
+/client/build/
+/client/.pnp/
+/client/.pnp.js
+
+# Ignore environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Ignore IDE and editor specific files
+.idea/
+.vscode/
+*.sublime-*
+*.swp
+*.swo
+
+# Ignore macOS specific files
+.DS_Store
+
+# Ignore log files
+*.log
+
+# Ignore dependencies lock files
+package-lock.json
+yarn.lock
+
+# Ignore production build files
+/dist/
