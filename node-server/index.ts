@@ -1,7 +1,10 @@
 import express, { Express, Request, Response} from 'express'
+import authRouter from "./routers/authRouter"
 
 const app = express();
 const port = 8000;
+
+app.use("/auth", authRouter)
 app.get('/', (req, res) => {
     res.send('Hello from the server.')
 })
