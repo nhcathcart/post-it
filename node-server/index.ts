@@ -7,7 +7,7 @@ const port = 8001;
 
 app.use(express.json());
 app.use(cookieParser());
-app.use("/auth", authRouter)
+app.use("/api/auth", authRouter)
 app.get('/', (req, res) => {
     res.send('Hello from the server.')
 })

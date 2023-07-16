@@ -1,0 +1,30 @@
+/* CSS HEX */
+/* --hookers-green: #5a7d7cff;
+--coral-pink: #eb9486ff;
+--eggshell: #edebd7ff;
+--rose-ebony: #63474dff;
+--space-cadet: #2b2d42ff; */
+.page-container{
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    height: 100vh;
+  }
+.egg-shell{
+    background-color: #edebd7;
+}
+.coral{
+    background-color: #eb9486;
+}
+.green{
+    background-color: #5a7d7c;
+}
+.dark-rose{
+    background-color: #63474d;
+}
+.deep-blue{
+    background-color: #2b2d42;
+}
+.text{
+    color: #e4dbd8;
+}

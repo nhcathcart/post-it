@@ -1,0 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@600&family=Roboto+Mono:wght@200&display=swap');
+html {
+  margin: 0;
+}
+body {
+  margin: 0;
+  color: #ffffff;
+  font-family: 'Roboto Mono', monospace;;
+}

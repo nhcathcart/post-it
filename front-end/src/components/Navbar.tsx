@@ -1,0 +1,116 @@
+import "../css/Navbar.css";
+import "../css/utility-css.css";
+import { useAppDispatch } from "../hooks";
+import { logoutUser } from "../reducers/loginReducer";
+
+
+export function Navbar() {
+  function toggleFullPageMenu() {
+    const menu = document.querySelector(".full-page-menu");
+    menu?.classList.toggle("full-page-menu-show");
+  }
+  const dispatch = useAppDispatch();
+
+  return (
+    <nav className="nav green">
+      <div className="title-container">
+        <h1 className="title">catch-up</h1>
+      </div>
+      <div className="hamburger-menu">
+        <button
+          onClick={() => {
+            toggleFullPageMenu();
+          }}
+          className="hamburger-menu-button"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth="1.5"
+            stroke="currentColor"
+            className="hamburger-menu-button"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+            />
+          </svg>
+        </button>
+      </div>
+      <div className="full-page-menu">
+        <button
+          className="nav-button-full"
+          onClick={() => {
+            //Whatever you want the button to do goes here
+            toggleFullPageMenu();
+          }}
+        >
+          home
+        </button>
+        <button
+          className="nav-button-full"
+          onClick={() => {
+            //Whatever you want the button to do goes here
+            toggleFullPageMenu();
+          }}
+        >
+          calendar
+        </button>
+        <button
+          className="nav-button-full"
+          onClick={() => {
+            //Whatever you want the button to do goes here
+            toggleFullPageMenu();
+          }}
+        >
+          friends
+        </button>
+        <button
+          className="nav-button-full"
+          onClick={() => {
+            //Whatever you want the button to do goes here
+            toggleFullPageMenu();
+          }}
+        >
+          logout
+        </button>
+      </div>
+      <div className="nav-button-container">
+        <button
+          className="nav-button"
+          onClick={() => {
+            //Whatever you want the button to do goes here
+          }}
+        >
+          home
+        </button>
+        <button
+          className="nav-button"
+          onClick={() => {
+            //Whatever you want the button to do goes here
+          }}
+        >
+          calendar
+        </button>
+        <button
+          className="nav-button"
+          onClick={() => {
+            //Whatever you want the button to do goes here
+          }}
+        >
+          friends
+        </button>
+        <button
+          className="nav-button"
+          onClick={() => {
+            dispatch(logoutUser())
+          }}
+        >
+          logout
+        </button>
+      </div>
+    </nav>
+  );
+}
