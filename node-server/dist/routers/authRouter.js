@@ -14,6 +14,9 @@ router.post("/create-user", authController_1.default.createUser, authController_
 router.post("/login", authController_1.default.getUser, authController_1.default.checkPassword, authController_1.default.setCookie, (req, res) => {
     res.send("this is the login");
 });
+router.post("/check-auth", authController_1.default.checkCookie, (req, res) => {
+    res.send("Authenticated!");
+});
 router.post("/logout", (req, res) => {
     res.send("this is the logout");
 });

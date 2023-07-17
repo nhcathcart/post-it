@@ -1,8 +1,14 @@
 import { Request, Response, NextFunction } from "express";
 import bcrypt from "bcrypt";
+import jwt, { Secret } from "jsonwebtoken";
 import { v4 as uuid } from "uuid";
 import { ErrorObject } from "../index";
 import db from "../db";
+import dotenv from "dotenv";
+
+dotenv.config();
+
+const secretKey = process.env.JWT_PRIVATE_KEY;
 
 const authController = {
   createUser: async (req: Request, res: Response, next: NextFunction) => {
@@ -76,14 +82,17 @@ const authController = {
     }
   },
   setCookie: async (req: Request, res: Response, next: NextFunction) => {
+    const { username } = req.body;
     const cookieName = "token";
-    const cookieValue = uuid();
+    const cookieValue = jwt.sign({ username: username }, secretKey as Secret, {
+      expiresIn: "1h",
+    });
     const options = {
       maxAge: 1000 * 60 * 15, // would expire after 15 minutes
       httpOnly: false, // CHANGE FOR PRODUCTION
     };
     res.cookie(cookieName, cookieValue, options);
-    const { username } = req.body;
+
     try {
       //update the record to set the cookie
       return next();
@@ -99,11 +108,15 @@ const authController = {
     }
   },
   checkCookie: async (req: Request, res: Response, next: NextFunction) => {
-    const { token } = res.locals.userInfo;
+    
     try {
-      if (token != req.cookies.token || token === "NULL")
-        throw "not authorized";
-      else return next();
+      const token = req.cookies.token;
+      if (!token) throw "not authorized"
+      jwt.verify(token, secretKey as Secret, (err:any, user:any) => {
+        if (err) throw "not authorized"
+        res.locals.username = user.username;
+        next();
+      });
     } catch (err) {
       const errorObj: ErrorObject = {
         log: "There was an error in the checkAuth middleware",

@@ -13,8 +13,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const bcrypt_1 = __importDefault(require("bcrypt"));
-const uuid_1 = require("uuid");
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const db_1 = __importDefault(require("../db"));
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
+const secretKey = process.env.JWT_PRIVATE_KEY;
 const authController = {
     createUser: (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
         const { username, password } = req.body;
@@ -90,14 +93,16 @@ const authController = {
         }
     }),
     setCookie: (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+        const { username } = req.body;
         const cookieName = "token";
-        const cookieValue = (0, uuid_1.v4)();
+        const cookieValue = jsonwebtoken_1.default.sign({ username: username }, secretKey, {
+            expiresIn: "1h",
+        });
         const options = {
             maxAge: 1000 * 60 * 15,
             httpOnly: false, // CHANGE FOR PRODUCTION
         };
         res.cookie(cookieName, cookieValue, options);
-        const { username } = req.body;
         try {
             //update the record to set the cookie
             return next();
@@ -114,12 +119,16 @@ const authController = {
         }
     }),
     checkCookie: (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-        const { token } = res.locals.userInfo;
         try {
-            if (token != req.cookies.token || token === "NULL")
+            const token = req.cookies.token;
+            if (!token)
                 throw "not authorized";
-            else
-                return next();
+            jsonwebtoken_1.default.verify(token, secretKey, (err, user) => {
+                if (err)
+                    throw "not authorized";
+                res.locals.username = user.username;
+                next();
+            });
         }
         catch (err) {
             const errorObj = {

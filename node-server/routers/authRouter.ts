@@ -9,6 +9,9 @@ router.post("/create-user", authController.createUser, authController.setCookie,
 router.post("/login", authController.getUser, authController.checkPassword, authController.setCookie, (req, res) => {
     res.send("this is the login")
 })
+router.post("/check-auth", authController.checkCookie, (req, res) => {
+    res.send("Authenticated!")
+})
 router.post("/logout", (req, res) => {
     res.send("this is the logout")
 })
