@@ -33,6 +33,9 @@
 .button:hover{
     background-color: #6c9594;
 }
+.hidden{
+  display: none;
+}
 .egg-shell {
   background-color: #edebd7;
 }
