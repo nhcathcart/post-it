@@ -10,11 +10,13 @@ import Protected from "./components/Protected";
 const router = createBrowserRouter([
   {
     path: "/",
-    element: (
-      <Protected>
-        <Homepage />
-      </Protected>
-    ),
+    element: <Protected />,
+    children: [
+      {
+        path: "/home",
+        element: <Homepage />,
+      },
+    ],
   },
   {
     path: "/login",

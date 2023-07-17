@@ -10,10 +10,10 @@ router.post("/login", authController.getUser, authController.checkPassword, auth
     return res.json({username: res.locals.username})
 })
 router.post("/check-auth", authController.checkCookie, (req, res) => {
-    return res.send("Authenticated!")
+    return res.json({ username: res.locals.username });
 })
-router.post("/logout", (req, res) => {
-    return res.send("this is the logout")
+router.post("/logout", authController.invalidateCookie, (req, res) => {
+    return res.json("successful logout")
 })
 
 export default router

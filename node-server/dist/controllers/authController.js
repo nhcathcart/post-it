@@ -24,13 +24,12 @@ const authController = {
         console.log(req.body);
         const salt = yield bcrypt_1.default.genSalt(8);
         const passwordHash = yield bcrypt_1.default.hash(password, salt);
-        const query = `
-    INSERT INTO users (username, password)
-    VALUES ($1, $2);
-  `;
+        const query = `INSERT INTO users(username, password) VALUES ($1, $2);`;
         const values = [username, passwordHash];
         try {
+            console.log("creating user, query: ", query, values);
             const result = yield db_1.default.query(query, values);
+            console.log(result);
             return next();
         }
         catch (err) {
@@ -50,28 +49,27 @@ const authController = {
         const query = `
     SELECT *
     FROM users
-    WHERE username = $<1>;
+    WHERE username=$1;
     `;
         const values = [username];
         try {
             const result = yield db_1.default.query(query, values);
-            console.log(result.rows);
-            res.locals.userInfo = result.rows;
+            res.locals.userInfo = result.rows[0];
             return next();
         }
         catch (err) {
             const errorObj = {
-                log: "There was an error in the addUser middleware",
+                log: "There was an error in the getUser middleware",
                 status: 500,
                 message: {
-                    err: "There was a problem adding the user",
+                    err: "There was a problem getting the user",
                 },
             };
             next(errorObj);
         }
     }),
     checkPassword: (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-        const { passwordHash } = res.locals.userInfo;
+        const passwordHash = res.locals.userInfo.password;
         const { password } = req.body;
         try {
             const result = yield bcrypt_1.default.compare(password, passwordHash);
@@ -122,6 +120,7 @@ const authController = {
     }),
     checkCookie: (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
         try {
+            console.log("cookies is: ", req.cookies);
             const token = req.cookies.token;
             if (!token)
                 throw "not authorized";
@@ -129,12 +128,12 @@ const authController = {
                 if (err)
                     throw "not authorized";
                 res.locals.username = user.username;
-                next();
+                return next();
             });
         }
         catch (err) {
             const errorObj = {
-                log: "There was an error in the checkAuth middleware",
+                log: `There was an error in the checkAuth middleware: ${err}`,
                 status: 500,
                 message: {
                     err: err === "not authorized" ? "not authorized" : "There was a problem",
@@ -146,14 +145,9 @@ const authController = {
     invalidateCookie: (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
         const cookieName = "token";
         const { username } = req.body;
-        const query = `
-    UPDATE users
-    SET token = NULL
-    WHERE username = ${username};
-    `;
+        console.log("invalidate cookie middle");
         try {
-            db_1.default.query(query);
-            res.clearCookie(cookieName);
+            res.clearCookie('token');
             return next();
         }
         catch (err) {

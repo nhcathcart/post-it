@@ -15,9 +15,9 @@ router.post("/login", authController_1.default.getUser, authController_1.default
     return res.json({ username: res.locals.username });
 });
 router.post("/check-auth", authController_1.default.checkCookie, (req, res) => {
-    return res.send("Authenticated!");
+    return res.json({ username: res.locals.username });
 });
-router.post("/logout", (req, res) => {
-    return res.send("this is the logout");
+router.post("/logout", authController_1.default.invalidateCookie, (req, res) => {
+    return res.json("successful logout");
 });
 exports.default = router;
