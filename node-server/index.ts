@@ -11,9 +11,7 @@ app.use("/api/auth", authRouter)
 app.get('/', (req, res) => {
     res.send('Hello from the server.')
 })
-app.get('/anotherOne', (req, res) => {
-    res.send('Another ONe')
-})
+
 export interface ErrorObject {
     log: string;
     status: number;

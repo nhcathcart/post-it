@@ -1,11 +1,11 @@
 export async function login(username: string, password: string) {
-  const response = await fetch("/api/auth/logout", {
+  const response = await fetch("/api/auth/login", {
     method: "POST",
     credentials: "include",
-    body: JSON.stringify({ username, password }),
+    body: JSON.stringify({ username: username, password: password }),
   });
   const responseParsed = await response.json();
-  if (responseParsed.data.username)
+  if (responseParsed.username)
     localStorage.setItem("user", JSON.stringify(responseParsed));
   return responseParsed;
 }
@@ -20,13 +20,17 @@ export async function checkAuth() {
 }
 
 export async function createUser(username: string, password: string) {
+  console.log("in create user, username and pass are: ", username, password);
   const response = await fetch("/api/auth/create-user", {
     method: "POST",
     credentials: "include",
-    body: JSON.stringify({ username, password }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ username: username, password: password }),
   });
   const responseParsed = await response.json();
-  if (responseParsed.data.username)
+  if (responseParsed.username)
     localStorage.setItem("user", JSON.stringify(responseParsed));
   return responseParsed;
 }
@@ -52,4 +56,4 @@ const LoginService = {
   getCurrentUser,
 };
 
-export default LoginService
+export default LoginService;

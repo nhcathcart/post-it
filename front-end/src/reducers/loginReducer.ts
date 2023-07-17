@@ -8,9 +8,9 @@ import {
 } from "../services/LoginService";
 
 interface loginInfo {
-  username: string | undefined;
-  password: string | undefined;
-  confirmPass: string | undefined;
+  username: string;
+  password: string;
+  confirmPass: string;
   isLoggedIn: boolean;
 }
 interface UserObj {
@@ -21,9 +21,9 @@ interface ReturnedUser {
   user: {username: string}
 }
 const initialState: loginInfo = {
-  username: undefined,
-  password: undefined,
-  confirmPass: undefined,
+  username: '',
+  password: '',
+  confirmPass: '',
   isLoggedIn: false,
 };
 
@@ -35,7 +35,7 @@ export const logoutUser = createAsyncThunk("/api/auth/logout", async () => {
 });
 
 export const loginUser = createAsyncThunk(
-  "api/auth/login",
+  "/api/auth/login",
   async (userObj: UserObj, thunkAPI) => {
     const { username, password } = userObj;
     try {
@@ -47,12 +47,27 @@ export const loginUser = createAsyncThunk(
   }
 );
 
+export const createNewUser = createAsyncThunk(
+  "/api/auth/create-user",
+  async (userObj: UserObj, thunkAPI) => {
+    console.log('Userobj is: ', userObj)
+    const { username, password } = userObj;
+    try {
+      const data = await createUser(username, password);
+      thunkAPI.dispatch(validateCreds());
+      return { username: data.username }
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
 export const checkUserAuth = createAsyncThunk(
-  "api/auth/check-auth",
+  "/api/auth/check-auth",
   async (_, thunkAPI) => {
-    
     try {
       const data = await checkAuth();
+      thunkAPI.dispatch(validateCreds())
       return { username: data.username }
     } catch (error) {
       return thunkAPI.rejectWithValue(error);

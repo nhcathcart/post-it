@@ -13,11 +13,12 @@ const secretKey = process.env.JWT_PRIVATE_KEY;
 const authController = {
   createUser: async (req: Request, res: Response, next: NextFunction) => {
     const { username, password } = req.body;
-    const salt = await bcrypt.genSalt();
+    console.log(req.body);
+    const salt = await bcrypt.genSalt(8);
     const passwordHash = await bcrypt.hash(password, salt);
     const query = `
-    INSERT INTO users (username, password, token)
-    VALUES ($1, $2, NULL);
+    INSERT INTO users (username, password)
+    VALUES ($1, $2);
   `;
     const values = [username, passwordHash];
     try {
@@ -83,6 +84,7 @@ const authController = {
   },
   setCookie: async (req: Request, res: Response, next: NextFunction) => {
     const { username } = req.body;
+    res.locals.username = username;
     const cookieName = "token";
     const cookieValue = jwt.sign({ username: username }, secretKey as Secret, {
       expiresIn: "1h",
@@ -108,12 +110,11 @@ const authController = {
     }
   },
   checkCookie: async (req: Request, res: Response, next: NextFunction) => {
-    
     try {
       const token = req.cookies.token;
-      if (!token) throw "not authorized"
-      jwt.verify(token, secretKey as Secret, (err:any, user:any) => {
-        if (err) throw "not authorized"
+      if (!token) throw "not authorized";
+      jwt.verify(token, secretKey as Secret, (err: any, user: any) => {
+        if (err) throw "not authorized";
         res.locals.username = user.username;
         next();
       });

@@ -2,15 +2,19 @@ import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Provider } from "react-redux";
 import { store } from "./store";
-import Homepage from "./components/Homepage"
-import "./index.css"
+import Homepage from "./components/Homepage";
+import "./index.css";
 import LoginPage from "./components/LoginPage";
 import CreateUserPage from "./components/CreateUserPage";
-import { ProtectedRoute } from "./components/ProtectedRoute";
+import Protected from "./components/Protected";
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <ProtectedRoute><Homepage /></ProtectedRoute>,
+    element: (
+      <Protected>
+        <Homepage />
+      </Protected>
+    ),
   },
   {
     path: "/login",
@@ -18,8 +22,8 @@ const router = createBrowserRouter([
   },
   {
     path: "/create-user",
-    element: <CreateUserPage/>
-  }
+    element: <CreateUserPage />,
+  },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(

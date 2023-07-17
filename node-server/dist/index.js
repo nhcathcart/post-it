@@ -14,9 +14,6 @@ app.use("/api/auth", authRouter_1.default);
 app.get('/', (req, res) => {
     res.send('Hello from the server.');
 });
-app.get('/anotherOne', (req, res) => {
-    res.send('Another ONe');
-});
 app.use((err, req, res, next) => {
     const defautErr = {
         log: "Express error handler caught unknown middleware error",

@@ -21,11 +21,12 @@ const secretKey = process.env.JWT_PRIVATE_KEY;
 const authController = {
     createUser: (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
         const { username, password } = req.body;
-        const salt = yield bcrypt_1.default.genSalt();
+        console.log(req.body);
+        const salt = yield bcrypt_1.default.genSalt(8);
         const passwordHash = yield bcrypt_1.default.hash(password, salt);
         const query = `
-    INSERT INTO users (username, password, token)
-    VALUES ($1, $2, NULL);
+    INSERT INTO users (username, password)
+    VALUES ($1, $2);
   `;
         const values = [username, passwordHash];
         try {
@@ -94,6 +95,7 @@ const authController = {
     }),
     setCookie: (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
         const { username } = req.body;
+        res.locals.username = username;
         const cookieName = "token";
         const cookieValue = jsonwebtoken_1.default.sign({ username: username }, secretKey, {
             expiresIn: "1h",
