@@ -3,21 +3,20 @@ import "../css/utility-css.css";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import { logoutUser } from "../reducers/loginReducer";
 
-
 export function Navbar() {
   function toggleFullPageMenu() {
     const menu = document.querySelector(".full-page-menu");
     menu?.classList.toggle("full-page-menu-show");
   }
   const dispatch = useAppDispatch();
-  const state = useAppSelector(state => state.login);
+  const state = useAppSelector((state) => state.login);
 
   return (
     <nav className="nav green">
       <div className="title-container">
         <h1 className="title">catch-up</h1>
       </div>
-      <div className={state.isLoggedIn? "hamburger-menu" : "hidden"}>
+      <div className={state.isLoggedIn ? "hamburger-menu" : "hidden"}>
         <button
           onClick={() => {
             toggleFullPageMenu();
@@ -78,7 +77,7 @@ export function Navbar() {
           logout
         </button>
       </div>
-      <div className={state.isLoggedIn? "nav-button-container" : "hidden"}>
+      <div className={state.isLoggedIn ? "nav-button-container" : "hidden"}>
         <button
           className="nav-button"
           onClick={() => {
@@ -106,7 +105,7 @@ export function Navbar() {
         <button
           className="nav-button"
           onClick={() => {
-            dispatch(logoutUser())
+            dispatch(logoutUser());
           }}
         >
           logout

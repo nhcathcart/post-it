@@ -1,28 +1,36 @@
-.login-card{
-    display: flex;
-    flex-direction: column;
-    align-self: center;
-    align-items: center;
-    justify-content: space-evenly;
-    height: 60%;
-    width: 30%;
-    border-radius: 10px;
-    border: none;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    color: black
+.login-card {
+  display: flex;
+  flex-direction: column;
+  align-self: center;
+  align-items: center;
+  justify-content: space-evenly;
+  height: 60%;
+  width: 30%;
+  border-radius: 10px;
+  border: none;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  color: black;
 }
-.login-title{
-    color: black;
+.login-title {
+  color: black;
 }
-.login-input{
-    width: 60%;
-    border-radius: 20px;
-    padding: 3%;
-    border: 1px solid #ccc;
+.login-input {
+  width: 60%;
+  border-radius: 20px;
+  padding: 3%;
+  border: 1px solid #ccc;
 }
-.login-button{
-    width: 60%;
+.login-button {
+  width: 60%;
 }
-.login-link-text{
-    font-size: small;
+.login-link-text {
+  font-size: small;
+}
+
+@media (max-width: 768px) {
+  /* Adjust the breakpoint as needed */
+  .login-card {
+    height: 95%;
+    width: 95%;
+  }
 }
