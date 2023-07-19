@@ -35,7 +35,7 @@ export const getEventsThunk = createAsyncThunk(
       const response = await getEvents();
       console.log(response)
       if (response === "There was a problem") throw "Problems getting events";
-      thunkAPI.dispatch(updateEvents(response));
+      thunkAPI.dispatch(loadEvents(response));
       return response;
     } catch(error) {
        return thunkAPI.rejectWithValue(error);
@@ -81,6 +81,9 @@ export const eventsSlice = createSlice({
     updateEvents: (state, action) => {
       state.events = state.events.concat(action.payload);
     },
+    loadEvents: (state, action) => {
+      state.events = action.payload
+    }
   },
 });
 
@@ -91,6 +94,7 @@ export const {
   updateAllDay,
   updateResource,
   updateEvents,
+  loadEvents,
 } = eventsSlice.actions;
 
 export default eventsSlice.reducer;
