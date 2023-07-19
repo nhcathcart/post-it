@@ -7,6 +7,7 @@ import "./index.css";
 import LoginPage from "./components/LoginPage";
 import CreateUserPage from "./components/CreateUserPage";
 import Protected from "./components/Protected";
+import CalendarPage from "./components/CalendarPage"
 const router = createBrowserRouter([
   {
     path: "/",
@@ -16,6 +17,10 @@ const router = createBrowserRouter([
         path: "/home",
         element: <Homepage />,
       },
+      {
+        path: "/calendar",
+        element: <CalendarPage />,
+      }
     ],
   },
   {

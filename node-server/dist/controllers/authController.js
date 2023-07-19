@@ -125,6 +125,7 @@ const authController = {
             if (!token)
                 throw "not authorized";
             jsonwebtoken_1.default.verify(token, secretKey, (err, user) => {
+                console.log("in verify");
                 if (err)
                     throw "not authorized";
                 res.locals.username = user.username;

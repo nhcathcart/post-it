@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router";
 import "../css/Navbar.css";
 import "../css/utility-css.css";
 import { useAppDispatch, useAppSelector } from "../hooks";
@@ -10,6 +11,7 @@ export function Navbar() {
   }
   const dispatch = useAppDispatch();
   const state = useAppSelector((state) => state.login);
+  const navigate = useNavigate();
 
   return (
     <nav className="nav green">
@@ -81,7 +83,7 @@ export function Navbar() {
         <button
           className="nav-button"
           onClick={() => {
-            //Whatever you want the button to do goes here
+            navigate("/home")
           }}
         >
           home
@@ -89,7 +91,7 @@ export function Navbar() {
         <button
           className="nav-button"
           onClick={() => {
-            //Whatever you want the button to do goes here
+            navigate("/calendar")
           }}
         >
           calendar

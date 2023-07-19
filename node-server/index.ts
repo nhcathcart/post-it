@@ -1,6 +1,7 @@
 import express, { Express, Request, Response, NextFunction} from 'express'
 import cookieParser from "cookie-parser";
 import authRouter from "./routers/authRouter"
+import eventsRouter from "./routers/eventsRouter"
 
 const app = express();
 const port = 8001;
@@ -8,6 +9,7 @@ const port = 8001;
 app.use(express.json());
 app.use(cookieParser());
 app.use("/api/auth", authRouter)
+app.use("/api/events", eventsRouter)
 app.get('/', (req, res) => {
     res.send('Hello from the server.')
 })

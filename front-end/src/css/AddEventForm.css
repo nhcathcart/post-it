@@ -1,0 +1,31 @@
+.event-form-container {
+  display: flex;
+  flex-direction: column;
+  align-self: center;
+  align-items: center;
+  justify-content: space-around;
+  height: 90%;
+  width: 80%;
+  border: none;
+  color: black;
+}
+.event-form-input {
+  width: 100%;
+  border-radius: 20px;
+  padding: 2%;
+  border: 1px solid #ccc;
+  font-family: inherit;
+}
+.event-form-lable {
+}
+
+.event-form-text-area {
+  height: 40%;
+  resize: none;
+  width: 100%;
+  border-radius: 20px;
+  padding: 2%;
+  border: 1px solid #ccc;
+  font-family: inherit;
+  font-size: inherit;
+}

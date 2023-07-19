@@ -112,6 +112,7 @@ const authController = {
       const token = req.cookies.token;
       if (!token) throw "not authorized";
       jwt.verify(token, secretKey as Secret, (err: any, user: any) => {
+        console.log("in verify")
         if (err) throw "not authorized";
         res.locals.username = user.username;
         return next();

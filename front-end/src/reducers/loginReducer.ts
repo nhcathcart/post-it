@@ -5,7 +5,7 @@ import {
   logout,
   checkAuth,
   getCurrentUser,
-} from "../services/LoginService";
+} from "../services/loginService";
 
 interface loginInfo {
   username: string;
@@ -32,9 +32,7 @@ const initialState: loginInfo = {
 export const logoutUser = createAsyncThunk(
   "/api/auth/logout",
   async (_, thunkAPI) => {
-    console.log("logging out");
     const response = await logout();
-    console.log("response is: ", response);
     if (response === "successful logout") {
       thunkAPI.dispatch(invalidateCreds());
       window.location.reload();

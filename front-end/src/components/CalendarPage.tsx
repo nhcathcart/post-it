@@ -6,6 +6,7 @@ import { MyCalendar } from "./Calendar";
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import { checkUserAuth } from "../reducers/loginReducer";
+import { ModalButton } from "./ModalButton";
 
 export default function Homepage() {
   const dispatch = useAppDispatch();
@@ -15,7 +16,9 @@ export default function Homepage() {
     <div className="page-container">
       <Navbar />
       <div className="content-container">
-        
+        <div className="calendar-container">
+          <MyCalendar />
+        </div>
       </div>
     </div>
   );

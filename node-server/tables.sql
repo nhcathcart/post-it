@@ -5,21 +5,27 @@ CREATE TABLE users (
   password VARCHAR(255) NOT NULL
 );
 
-
-CREATE TABLE posts (
+CREATE TABLE events (
   id SERIAL PRIMARY KEY,
   user_id INT NOT NULL,
-  content TEXT NOT NULL,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+  title VARCHAR(50) NOT NULL,
+  start_date TIMESTAMP NOT NULL,
+  end_date TIMESTAMP NOT NULL,
+  all_day BOOL NOT NULL,
+  resource VARCHAR(500)
 );
 
-
-CREATE TABLE likes (
+CREATE TABLE friends (
   id SERIAL PRIMARY KEY,
-  post_id INT NOT NULL,
   user_id INT NOT NULL,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE,
-  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+  friend_id INT NOT NULL,
+  FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
+  FOREIGN KEY (friend_id) REFERENCES users (id) ON DELETE CASCADE
+);
+
+CREATE TABLE friend_groups (
+  id SERIAL PRIMARY KEY,
+  group_name VARCHAR(100) NOT NULL,
+  owner_id INT NOT NULL,
+  FOREIGN KEY (owner_id) REFERENCES users (id) ON DELETE CASCADE
 );
