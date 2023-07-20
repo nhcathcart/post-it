@@ -40,15 +40,15 @@ export default function AddEventForm() {
       />
       <DateTimePicker
         onChange={(date) => {
-            dispatch(updateStart(date));
-            dispatch(updateEnd(date));
+            dispatch(updateStart(date?.toISOString()));
+            dispatch(updateEnd(date?.toISOString()));
         }}
         value={start}
         disableClock={true}
       />
       <DateTimePicker 
         onChange={(date) => {
-            dispatch(updateEnd(date))
+            dispatch(updateEnd(date?.toISOString()))
         }}
         value={end} 
         disableClock={true} 

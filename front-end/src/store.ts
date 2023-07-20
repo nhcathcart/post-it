@@ -1,11 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit'
 import loginReducer from './reducers/loginReducer'
 import eventsReducer from './reducers/eventsReducer'
+import friendsReducer from './reducers/friendsReducer'
 
 export const store = configureStore({
   reducer: {
     login: loginReducer,
     events: eventsReducer,
+    friends: friendsReducer
   },
 })
 

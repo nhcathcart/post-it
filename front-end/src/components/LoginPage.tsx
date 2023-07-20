@@ -12,15 +12,12 @@ export default function LoginPage() {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    console.log("checking login, ", state.isLoggedIn);
     if (state.isLoggedIn) {
-      console.log("state is yes");
       navigate("/home");
     }
   }, [state.isLoggedIn]);
 
   useEffect(() => {
-    console.log("checkign user auth");
     dispatch(checkUserAuth());
   });
 

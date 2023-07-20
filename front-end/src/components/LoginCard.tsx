@@ -15,14 +15,13 @@ export default function LoginCard() {
   const state = useAppSelector((state) => state.login);
   const navigate = useNavigate();
   const handleLogin = async (e: any) => {
+    //maybe clean this one up
     try {
       e.preventDefault();
       dispatch(
         loginUser({ username: state.username, password: state.password })
       ).then((res) => {
-        console.log("got dispatch response, ", res);
         if (res.payload !== "unauthorized") {
-          console.log("login successful");
           navigate("/home");
         } else {
           setErr(true);
@@ -30,7 +29,6 @@ export default function LoginCard() {
       });
     } catch (error) {
       e.preventDefault();
-      console.log("caught error");
       setErr(true);
     }
   };

@@ -8,6 +8,7 @@ import LoginPage from "./components/LoginPage";
 import CreateUserPage from "./components/CreateUserPage";
 import Protected from "./components/Protected";
 import CalendarPage from "./components/CalendarPage"
+import FriendsPage from "./components/FriendsPage";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -20,6 +21,10 @@ const router = createBrowserRouter([
       {
         path: "/calendar",
         element: <CalendarPage />,
+      },
+      {
+        path: "/friends",
+        element: <FriendsPage/>
       }
     ],
   },

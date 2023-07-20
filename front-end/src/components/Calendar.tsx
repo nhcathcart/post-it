@@ -2,38 +2,37 @@ import { Calendar, momentLocalizer, Event } from "react-big-calendar";
 import moment from "moment";
 import { useEffect, useMemo } from "react";
 import { ModalButton } from "./ModalButton";
-import AddEventForm from "./AddEventForm"
+import AddEventForm from "./AddEventForm";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import { getEventsThunk } from "../reducers/eventsReducer";
 
-interface Props {}
 
-//dummy event data
+//helper function to format event objects
 
-// Event {
-//   title: string,
-//   start: Date,
-//   end: Date,
-//   allDay?: boolean
-//   resource?: any,
-//}
-const events: Event[] = [
-  {
-    title: "event-1",
-    start: new Date(2023, 6, 22, 22),
-    end: new Date(2023, 6, 22, 23),
-  },
-];
+function formatEvents(events: any) {
+  const formattedEvents = events.map((event: any) => {
+    //This formats the date strings into date objects
+    return {
+      title: event.title,
+      start: new Date(event.start),
+      end: new Date(event.end),
+      allDay: event.allDay,
+      resource: event.resource,
+    };
+  });
+  return formattedEvents;
+}
 const localizer = momentLocalizer(moment);
 
-export function MyCalendar(props: Props) {
-  const dispatch = useAppDispatch();
-  const state = useAppSelector((state) => state.events.events)
-  const events = state
+export function MyCalendar() {
 
-  useEffect(()=> {
-    dispatch(getEventsThunk())
-  }, [])
+  const dispatch = useAppDispatch();
+  const state = useAppSelector((state) => state.events.events);
+  const events = formatEvents(state);
+
+  useEffect(() => {
+    dispatch(getEventsThunk());
+  }, []);
 
   const { components, defaultDate } = useMemo(
     () => ({
@@ -73,7 +72,6 @@ export function MyCalendar(props: Props) {
           >
             Next
           </button>
-          
         </div>
 
         {toolbar.label}
@@ -89,7 +87,7 @@ export function MyCalendar(props: Props) {
               {view}
             </button>
           ))}
-          <ModalButton >
+          <ModalButton>
             <AddEventForm />
           </ModalButton>
         </div>
@@ -97,7 +95,7 @@ export function MyCalendar(props: Props) {
     );
   }
 
-  console.log(Calendar);
+  
 
   return (
     <>

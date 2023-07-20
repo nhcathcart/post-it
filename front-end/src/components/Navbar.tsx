@@ -99,7 +99,7 @@ export function Navbar() {
         <button
           className="nav-button"
           onClick={() => {
-            //Whatever you want the button to do goes here
+            navigate("/friends")
           }}
         >
           friends
