@@ -7,61 +7,48 @@ import {
   updateFriendSearch,
   filterViewableFriendGroups,
   filterViewableFriends,
+  toggleFriendsList,
+  toggleFriendGroups,
+  toggleFindFriends,
 } from "../reducers/friendsReducer";
+import FriendsList from "./FriendsList";
+import FriendGroup from "./FriendGroups";
+import FindFriends from "./FindFriends";
 
 export default function FriendsPage() {
-  const state = useAppSelector((state) => state.friends);
+  const state = useAppSelector((state) => state.friends.friendsView);
   const dispatch = useAppDispatch();
 
-  const friendsList = state.viewableFriends.map((friend) => {
-    return (
-      <div className="friend-bubble" key={friend}>
-        <p>{friend}</p>
-      </div>
-    );
-  });
-  const friendGroupsList = state.viewableFriendGroups.map((friendGroup) => {
-    return (
-        <div className="friend-bubble" key={friendGroup}>
-            <p>{friendGroup}</p>
-        </div>
-    )
-  })
   return (
     <div className="page-container">
       <Navbar />
       <div className="content-container">
         <div className="friends-page-conatiner">
           <div className="friends-sidebar">
-            <button className="friends-sidebar-button">Friends</button>
-            <button className="friends-sidebar-button">Friend-Groups</button>
-            <button className="friends-sidebar-button">Find Friends</button>
+            <button
+              className="friends-sidebar-button"
+              onClick={() => dispatch(toggleFriendsList())}
+            >
+              Friends
+            </button>
+            <button
+              className="friends-sidebar-button"
+              onClick={() => dispatch(toggleFriendGroups())}
+            >
+              Friend-Groups
+            </button>
+            <button
+              className="friends-sidebar-button"
+              onClick={() => dispatch(toggleFindFriends())}
+            >
+              Find Friends
+            </button>
           </div>
-          <div className="friends-content-container">
-          <div className="friends-list-container">
-            <h3>Friends</h3>
-            <input
-              type="text"
-              placeholder="search"
-              className="friend-search-input"
-              onChange={(e) => dispatch(filterViewableFriends(e.target.value))}
-            />
-            {friendsList}
-          </div>
-          <div className="friends-list-container">
-            <h3>Friend Groups</h3>
-            <input
-              type="text"
-              placeholder="search"
-              className="friend-search-input"
-              onChange={(e) => dispatch(filterViewableFriendGroups(e.target.value))}
-            />
-            {friendGroupsList}
-          </div>
-          </div>
+          {state.friendsList ? <FriendsList /> : null}
+          {state.friendGroups ? <FriendGroup /> : null}
+          {state.findFriends ? <FindFriends /> : null}
         </div>
       </div>
-      
     </div>
   );
 }
