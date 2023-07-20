@@ -41,6 +41,16 @@ const authController = {
     const values = [username];
     try {
       const result = await db.query(query, values);
+      if (result.rows.length === 0) {
+        const errorObj: ErrorObject = {
+          log: "User not found",
+          status: 404,
+          message: {
+            err: "User not found",
+          },
+        };
+        return next(errorObj);
+      }
       res.locals.userInfo = result.rows[0];
       return next();
     } catch (err) {
