@@ -13,18 +13,14 @@ const secretKey = process.env.JWT_PRIVATE_KEY;
 const authController = {
   createUser: async (req: Request, res: Response, next: NextFunction) => {
     const { username, password } = req.body;
-    console.log(req.body);
     const salt = await bcrypt.genSalt(8);
     const passwordHash = await bcrypt.hash(password, salt);
     const query = `INSERT INTO users(username, password) VALUES ($1, $2);`;
     const values = [username, passwordHash];
     try {
-      console.log("creating user, query: ", query, values);
       const result = await db.query(query, values);
-      console.log(result);
       return next();
     } catch (err) {
-      console.log(err);
       const errorObj: ErrorObject = {
         log: "There was an error in the createUser middleware",
         status: 500,
@@ -108,11 +104,10 @@ const authController = {
   },
   checkCookie: async (req: Request, res: Response, next: NextFunction) => {
     try {
-      console.log("cookies is: ", req.cookies);
       const token = req.cookies.token;
       if (!token) throw "not authorized";
       jwt.verify(token, secretKey as Secret, (err: any, user: any) => {
-        console.log("in verify")
+        
         if (err) throw "not authorized";
         res.locals.username = user.username;
         return next();
@@ -132,7 +127,6 @@ const authController = {
   invalidateCookie: async (req: Request, res: Response, next: NextFunction) => {
     const cookieName = "token";
     const { username } = req.body;
-    console.log("invalidate cookie middle")
     try {
       res.clearCookie('token');
       return next();

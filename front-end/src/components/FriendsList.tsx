@@ -15,13 +15,7 @@ export default function FriendsList() {
       </div>
     );
   });
-  const friendGroupsList = state.viewableFriendGroups.map((friendGroup) => {
-    return (
-      <div className="friend-bubble" key={friendGroup}>
-        <p>{friendGroup}</p>
-      </div>
-    );
-  });
+  
   return (
     <div className="friends-content-container">
       <div className="friends-list-container">
@@ -34,16 +28,7 @@ export default function FriendsList() {
         />
         {friendsList}
       </div>
-      <div className="friends-list-container">
-        <h3>Friend Groups</h3>
-        <input
-          type="text"
-          placeholder="search"
-          className="friend-search-input"
-          onChange={(e) => dispatch(filterViewableFriendGroups(e.target.value))}
-        />
-        {friendGroupsList}
-      </div>
+      
     </div>
   );
 }

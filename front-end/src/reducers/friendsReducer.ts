@@ -1,9 +1,10 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { Event } from "react-big-calendar";
-import { getEvents, postEvent } from "../services/eventsService";
+import { friendSearch, addFriend, loadFriends } from "../services/friendsService";
 
 interface FriendState {
   friendSearch: "";
+  findFriendsList: string[];
   friends: string[];
   viewableFriends: string[];
   friendGroupSearch: string;
@@ -20,6 +21,7 @@ interface FriendsView {
 
 const initialState: FriendState = {
   friendSearch: "",
+  findFriendsList: [],
   friends: [
     "Nan",
     "Katz",
@@ -55,12 +57,45 @@ const initialState: FriendState = {
 };
 
 //Thunks, these use functions imported from the eventsService
-// export const getEventsThunk = createAsyncThunk(
-//   "",
-//   async (_, thunkAPI) => {
+export const friendSearchThunk = createAsyncThunk(
+  "/api/friends/search",
+  async (searchTerm: string, thunkAPI) => {
+    try {
+      const response = await friendSearch(searchTerm);
+      thunkAPI.dispatch(updateFindFriendList(response));
+      return response;
+    } catch (error) {
+      console.log('caught error:', error);
+      throw new Error("Problems finding friends");
+    }
+  }
+);
 
-//   }
-// );
+export const addFriendThunk = createAsyncThunk(
+  "/api/friends/add-friend",
+  async (username: string, thunkAPI) => {
+    try{
+      const response = await addFriend(username);
+      if (response === "There was a problem") throw "Problems adding friend";
+      thunkAPI.dispatch(addFriendToFriends(username));
+      return "SUCCESS";
+    }catch(error){
+      return thunkAPI.rejectWithValue(error)
+    }
+  }
+)
+export const loadFriendsThunk = createAsyncThunk(
+  "/api/friends/get-friends",
+  async (_, thunkAPI) => {
+    try{
+      const response = await loadFriends();
+      if (response === "There was a problem") throw "Problems adding friend";
+      thunkAPI.dispatch(loadFriendsList)
+    }catch(error){
+      return thunkAPI.rejectWithValue(error)
+    }
+  }
+)
 //helpers
 function filterByPrefix(strings: string[], search: string): string[] {
   const lowercasedSearch = search.toLowerCase();
@@ -76,6 +111,9 @@ export const friendsSlice = createSlice({
     updateFriendSearch: (state, action) => {
       state.friendSearch = action.payload;
     },
+    updateFindFriendList: (state, action) => {
+      state.findFriendsList = action.payload
+    },
     filterViewableFriends: (state, action) => {
       state.viewableFriends = filterByPrefix(state.friends, action.payload);
     },
@@ -87,6 +125,12 @@ export const friendsSlice = createSlice({
         state.friendGroups,
         action.payload
       );
+    },
+    addFriendToFriends: (state, action) => {
+      state.friends.push(action.payload)
+    },
+    loadFriendsList: (state, action) => {
+      state.friends = action.payload
     },
     toggleFriendsList(state) {
       state.friendsView.friendsList = true;
@@ -108,9 +152,12 @@ export const friendsSlice = createSlice({
 
 export const {
   updateFriendSearch,
+  updateFindFriendList,
+  loadFriendsList,
   filterViewableFriendGroups,
   updateFriendGroupSearch,
   filterViewableFriends,
+  addFriendToFriends,
   toggleFriendsList,
   toggleFindFriends,
   toggleFriendGroups,

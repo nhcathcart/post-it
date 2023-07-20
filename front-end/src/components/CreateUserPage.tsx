@@ -10,7 +10,7 @@ export default function CreateUserPage() {
   const navigate = useNavigate();
   useEffect(() => {
     if (state.isLoggedIn) {
-      navigate("/home");
+      navigate("/");
     }
   }, [state.isLoggedIn]);
   return (

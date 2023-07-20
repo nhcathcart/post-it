@@ -11,15 +11,15 @@ export default function LoginPage() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    if (state.isLoggedIn) {
-      navigate("/home");
-    }
-  }, [state.isLoggedIn]);
+  // useEffect(() => {
+  //   if (state.isLoggedIn) {
+  //     navigate("/home");
+  //   }
+  // }, [state.isLoggedIn]);
 
-  useEffect(() => {
-    dispatch(checkUserAuth());
-  });
+  // useEffect(() => {
+  //   dispatch(checkUserAuth());
+  // });
 
   return (
     <div className="page-container">

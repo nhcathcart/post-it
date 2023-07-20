@@ -83,7 +83,7 @@ export function Navbar() {
         <button
           className="nav-button"
           onClick={() => {
-            navigate("/home")
+            navigate("/")
           }}
         >
           home

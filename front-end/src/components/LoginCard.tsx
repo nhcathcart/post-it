@@ -22,7 +22,7 @@ export default function LoginCard() {
         loginUser({ username: state.username, password: state.password })
       ).then((res) => {
         if (res.payload !== "unauthorized") {
-          navigate("/home");
+          navigate("/");
         } else {
           setErr(true);
         }
