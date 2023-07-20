@@ -23,7 +23,6 @@ export async function checkAuth() {
 }
 
 export async function createUser(username: string, password: string) {
-  console.log("in create user, username and pass are: ", username, password);
   const response = await fetch("/api/auth/create-user", {
     method: "POST",
     credentials: "include",
@@ -39,15 +38,12 @@ export async function createUser(username: string, password: string) {
 }
 
 export async function logout() {
-  console.log('first line of logout');
   localStorage.removeItem("user");
   const response = await fetch("/api/auth/logout", {
     method: "POST",
     credentials: "include",
   });
-  console.log('i am in logout')
-  const responseParsed =  response.json();
-  console.log('i have parsed');
+  const responseParsed = response.json();
   return responseParsed;
 }
 

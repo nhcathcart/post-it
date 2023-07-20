@@ -1,8 +1,8 @@
 import "../css/utility-css.css";
 import "../css/LoginCard.css";
 import {
-    createNewUser,
-    loginUser,
+  createNewUser,
+  loginUser,
   updateCofirmPass,
   updatePassword,
   updateUsername,
@@ -10,7 +10,7 @@ import {
 import { useAppDispatch, useAppSelector } from "../hooks";
 export default function CreateUserCard() {
   const dispatch = useAppDispatch();
-  const state = useAppSelector(state => state.login)
+  const state = useAppSelector((state) => state.login);
   return (
     <>
       <div className="login-card">
@@ -39,7 +39,17 @@ export default function CreateUserCard() {
             dispatch(updateCofirmPass(e.target.value));
           }}
         ></input>
-        <button className="button login-button" onClick={() => {console.log(state); dispatch(createNewUser({username: state.username, password: state.password}))}}>
+        <button
+          className="button login-button"
+          onClick={() => {
+            dispatch(
+              createNewUser({
+                username: state.username,
+                password: state.password,
+              })
+            );
+          }}
+        >
           submit
         </button>
       </div>

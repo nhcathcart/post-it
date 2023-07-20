@@ -45,16 +45,13 @@ export const logoutUser = createAsyncThunk(
 export const loginUser = createAsyncThunk(
   "/api/auth/login",
   async (userObj: UserObj, thunkAPI) => {
-    console.log(userObj);
     const { username, password } = userObj;
     try {
       const data = await login(username, password);
-      console.log("data is: ", data);
       if (!data.username) throw "unauthorized";
       thunkAPI.dispatch(validateCreds());
       return { username: data.username };
     } catch (error) {
-      console.log(error);
       return thunkAPI.rejectWithValue(error);
     }
   }
@@ -78,11 +75,9 @@ export const checkUserAuth = createAsyncThunk(
   "/api/auth/check-auth",
   async (_, thunkAPI) => {
     try {
-      console.log("calling checkAuth");
       const data = await checkAuth();
-      console.log("data is: ", data);
+
       if (data.err) {
-        console.log("hit an error in checkAuth midlleware");
         throw "unauthorized";
       }
       thunkAPI.dispatch(validateCreds());

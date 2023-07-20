@@ -3,15 +3,15 @@ import { Event } from "react-big-calendar";
 import { getEvents, postEvent } from "../services/eventsService";
 import { ReactNode } from "react";
 
-export interface SQLEvent {
+export interface EventAdapter {
   title: React.ReactNode,
-  start: string,
-  end: string,
+  start: string | Date,
+  end: string | Date,
   allDay?: boolean
   resource?: any,
 }
 
-const initialState = {
+const initialState: EventsStateType = {
   events: [],
   newEvent: {
     title: "",
@@ -33,9 +33,8 @@ export const getEventsThunk = createAsyncThunk(
   async (_, thunkAPI) => {
     try {
       const response = await getEvents();
-      console.log(response)
       if (response === "There was a problem") throw "Problems getting events";
-      thunkAPI.dispatch(updateEvents(response));
+      thunkAPI.dispatch(loadEvents(response));
       return response;
     } catch(error) {
        return thunkAPI.rejectWithValue(error);
@@ -48,9 +47,7 @@ export const postEventThunk = createAsyncThunk(
   async (event: Event, thunkAPI) => {
     try {
       const response = await postEvent(event);
-      console.log(response)
       if (response === "There was a problem") throw "Problems posting event";
-      console.log('HERE!!')
       thunkAPI.dispatch(updateEvents(event));
       return response;
     } catch(error) {
@@ -81,6 +78,9 @@ export const eventsSlice = createSlice({
     updateEvents: (state, action) => {
       state.events = state.events.concat(action.payload);
     },
+    loadEvents: (state, action) => {
+      state.events = action.payload
+    }
   },
 });
 
@@ -91,6 +91,7 @@ export const {
   updateAllDay,
   updateResource,
   updateEvents,
+  loadEvents,
 } = eventsSlice.actions;
 
 export default eventsSlice.reducer;
