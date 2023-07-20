@@ -50,6 +50,16 @@ const authController = {
         const values = [username];
         try {
             const result = yield db_1.default.query(query, values);
+            if (result.rows.length === 0) {
+                const errorObj = {
+                    log: "User not found",
+                    status: 404,
+                    message: {
+                        err: "User not found",
+                    },
+                };
+                return next(errorObj);
+            }
             res.locals.userInfo = result.rows[0];
             return next();
         }
