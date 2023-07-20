@@ -9,6 +9,13 @@ interface FriendState {
   friendGroupSearch: string;
   friendGroups: string[];
   viewableFriendGroups: string[];
+  friendsView: FriendsView;
+}
+
+interface FriendsView {
+  friendsList: boolean;
+  friendGroups: boolean;
+  findFriends: boolean;
 }
 
 const initialState: FriendState = {
@@ -40,6 +47,11 @@ const initialState: FriendState = {
   friendGroupSearch: "",
   friendGroups: ["The Crew", "Classon House", "Dinner Party", "BBQ"],
   viewableFriendGroups: ["The Crew", "Classon House", "Dinner Party", "BBQ"],
+  friendsView: {
+    friendsList: true,
+    friendGroups: false,
+    findFriends: false,
+  },
 };
 
 //Thunks, these use functions imported from the eventsService
@@ -51,9 +63,11 @@ const initialState: FriendState = {
 // );
 //helpers
 function filterByPrefix(strings: string[], search: string): string[] {
-    const lowercasedSearch = search.toLowerCase();
-    return strings.filter((str) => str.toLowerCase().startsWith(lowercasedSearch));
-  }
+  const lowercasedSearch = search.toLowerCase();
+  return strings.filter((str) =>
+    str.toLowerCase().startsWith(lowercasedSearch)
+  );
+}
 
 export const friendsSlice = createSlice({
   name: "friends",
@@ -74,14 +88,32 @@ export const friendsSlice = createSlice({
         action.payload
       );
     },
+    toggleFriendsList(state) {
+      state.friendsView.friendsList = true;
+      state.friendsView.friendGroups = false;
+      state.friendsView.findFriends = false;
+    },
+    toggleFriendGroups(state) {
+      state.friendsView.friendsList = false;
+      state.friendsView.friendGroups = true;
+      state.friendsView.findFriends = false;
+    },
+    toggleFindFriends(state) {
+      state.friendsView.friendsList = false;
+      state.friendsView.friendGroups = false;
+      state.friendsView.findFriends = true;
+    },
   },
 });
 
 export const {
-    updateFriendSearch,
-    filterViewableFriendGroups,
-    updateFriendGroupSearch,
-    filterViewableFriends
+  updateFriendSearch,
+  filterViewableFriendGroups,
+  updateFriendGroupSearch,
+  filterViewableFriends,
+  toggleFriendsList,
+  toggleFindFriends,
+  toggleFriendGroups,
 } = friendsSlice.actions;
 
 export default friendsSlice.reducer;
