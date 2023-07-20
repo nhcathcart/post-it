@@ -33,7 +33,6 @@ const eventsController = {
         const values = [username, title, start, end, allDay, resource];
         try {
             const result = yield db_1.default.query(query, values);
-            console.log(result);
             res.locals.event = result.rows[0];
             return next();
         }

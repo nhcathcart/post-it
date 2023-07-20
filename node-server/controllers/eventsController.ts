@@ -26,7 +26,6 @@ const eventsController = {
 
     try {
       const result = await db.query(query, values);
-      console.log(result);
       res.locals.event = result.rows[0];
       return next();
     } catch (err) {

@@ -7,14 +7,16 @@ const express_1 = __importDefault(require("express"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const authRouter_1 = __importDefault(require("./routers/authRouter"));
 const eventsRouter_1 = __importDefault(require("./routers/eventsRouter"));
+const friendsRouter_1 = __importDefault(require("./routers/friendsRouter"));
 const app = (0, express_1.default)();
 const port = 8001;
 app.use(express_1.default.json());
 app.use((0, cookie_parser_1.default)());
 app.use("/api/auth", authRouter_1.default);
 app.use("/api/events", eventsRouter_1.default);
-app.get('/', (req, res) => {
-    res.send('Hello from the server.');
+app.use("/api/friends", friendsRouter_1.default);
+app.get("/", (req, res) => {
+    res.send("Hello from the server."); //This will serve the front-end dist files.
 });
 app.use((err, req, res, next) => {
     const defautErr = {

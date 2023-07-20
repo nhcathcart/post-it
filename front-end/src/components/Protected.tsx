@@ -11,6 +11,9 @@ function Protected() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
+  useEffect(() => {
+    dispatch(checkUserAuth());
+  }, []);
   if (!state.isLoggedIn) {
     return <LoginPage />;
   } else return <Outlet />;
