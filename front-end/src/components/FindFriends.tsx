@@ -1,10 +1,15 @@
 import "../css/utility-css.css";
 import "../css/FriendsPage.css";
 import { useAppDispatch, useAppSelector } from "../hooks";
-import { updateFriendSearch, friendSearchThunk } from "../reducers/friendsReducer";
-import { v4 as uuid,} from 'uuid';
+import {
+  updateFriendSearch,
+  friendSearchThunk,
+} from "../reducers/friendsReducer";
+import { v4 as uuid } from "uuid";
 import { ModalButton } from "./ModalButton";
-
+import { addFriendThunk } from "../reducers/friendsReducer";
+import { useEffect } from "react"
+import { loadPendingFriendsThunk } from "../reducers/friendsReducer";
 
 export default function FindFriends() {
   const dispatch = useAppDispatch();
@@ -13,25 +18,45 @@ export default function FindFriends() {
     return (
       <div className="friend-bubble" key={uuid()}>
         <p>{username}</p>
-        <ModalButton isDefault={false} cssClass={"add-friend-button"}>
-          
-        </ModalButton>
-        <button className="add-friend-button">Add</button>
+        <button
+          className="add-friend-button"
+          onClick={() => {
+            dispatch(addFriendThunk(username));
+          }}
+        >
+          Add
+        </button>
       </div>
     );
   });
+  const pendingFrinedsList = state.pendingFriends.map((username: string) => {
+    return (
+      <div className="friend-bubble" key={uuid()}>
+        <p>{username}</p>
+        <button className="add-friend-button" onClick={() => {}}>
+          Accept
+        </button>
+      </div>
+    );
+  });
+  useEffect(() => {
+    dispatch(loadPendingFriendsThunk())
+  }, []);
   return (
     <div className="friends-content-container">
       <div className="friends-list-container">
-      <h3>Find Friends</h3>
-      <input
-        type="text"
-        placeholder="search"
-        className="friend-search-input"
-        onChange={(e) => {dispatch(friendSearchThunk(e.target.value))}}
-      />
-      {searchList}
+        <h3>Find Friends</h3>
+        <input
+          type="text"
+          placeholder="search"
+          className="friend-search-input"
+          onChange={(e) => {
+            dispatch(friendSearchThunk(e.target.value));
+          }}
+        />
+        {searchList}
       </div>
+      
     </div>
   );
 }

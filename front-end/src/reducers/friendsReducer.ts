@@ -1,11 +1,12 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { Event } from "react-big-calendar";
-import { friendSearch, addFriend, loadFriends } from "../services/friendsService";
+import { friendSearch, addFriend, loadFriends, loadPendingFriends, acceptFriend } from "../services/friendsService";
 
 interface FriendState {
   friendSearch: "";
   findFriendsList: string[];
   friends: string[];
+  pendingFriends: string[];
   viewableFriends: string[];
   friendGroupSearch: string;
   friendGroups: string[];
@@ -22,30 +23,9 @@ interface FriendsView {
 const initialState: FriendState = {
   friendSearch: "",
   findFriendsList: [],
-  friends: [
-    "Nan",
-    "Katz",
-    "Lisa",
-    "Jenny",
-    "Noah",
-    "Alex",
-    "Amy",
-    "Matt",
-    "Kohli",
-    "Erin",
-  ],
-  viewableFriends: [
-    "Nan",
-    "Katz",
-    "Lisa",
-    "Jenny",
-    "Noah",
-    "Alex",
-    "Amy",
-    "Matt",
-    "Kohli",
-    "Erin",
-  ],
+  friends: [],
+  pendingFriends: [],
+  viewableFriends: [],
   friendGroupSearch: "",
   friendGroups: ["The Crew", "Classon House", "Dinner Party", "BBQ"],
   viewableFriendGroups: ["The Crew", "Classon House", "Dinner Party", "BBQ"],
@@ -77,7 +57,20 @@ export const addFriendThunk = createAsyncThunk(
     try{
       const response = await addFriend(username);
       if (response === "There was a problem") throw "Problems adding friend";
-      thunkAPI.dispatch(addFriendToFriends(username));
+      return "SUCCESS";
+    }catch(error){
+      return thunkAPI.rejectWithValue(error)
+    }
+  }
+)
+export const acceptFriendThunk = createAsyncThunk(
+  "/api/friends/accept-friend-request",
+  async (username: string, thunkAPI) => {
+    try{
+      const response = await acceptFriend(username);
+      if (response === "There was a problem") throw "Problems accepting friend";
+      thunkAPI.dispatch(addFriendToFriends(username))
+      thunkAPI.dispatch(addFriendtoViewableFriends(username))
       return "SUCCESS";
     }catch(error){
       return thunkAPI.rejectWithValue(error)
@@ -89,8 +82,21 @@ export const loadFriendsThunk = createAsyncThunk(
   async (_, thunkAPI) => {
     try{
       const response = await loadFriends();
-      if (response === "There was a problem") throw "Problems adding friend";
-      thunkAPI.dispatch(loadFriendsList)
+      if (response === "There was a problem") throw "Problems getting friends";
+      thunkAPI.dispatch(loadFriendsList(response))
+      thunkAPI.dispatch(loadViewableFriendsList(response))
+    }catch(error){
+      return thunkAPI.rejectWithValue(error)
+    }
+  }
+)
+export const loadPendingFriendsThunk = createAsyncThunk(
+  "/api/friends/get-pending-friends",
+  async (_, thunkAPI) => {
+    try{
+      const response = await loadPendingFriends();
+      if (response === "There was a problem") throw "Problems getting pending friends";
+      thunkAPI.dispatch(loadPendingFriendsList(response))
     }catch(error){
       return thunkAPI.rejectWithValue(error)
     }
@@ -129,8 +135,17 @@ export const friendsSlice = createSlice({
     addFriendToFriends: (state, action) => {
       state.friends.push(action.payload)
     },
+    addFriendtoViewableFriends: (state, action) => {
+      state.viewableFriends.push(action.payload)
+    },
     loadFriendsList: (state, action) => {
       state.friends = action.payload
+    },
+    loadViewableFriendsList: (state, action) => {
+      state.viewableFriends = action.payload
+    },
+    loadPendingFriendsList: (state, action) => {
+      state.pendingFriends = action.payload
     },
     toggleFriendsList(state) {
       state.friendsView.friendsList = true;
@@ -154,10 +169,13 @@ export const {
   updateFriendSearch,
   updateFindFriendList,
   loadFriendsList,
+  loadViewableFriendsList,
+  loadPendingFriendsList,
   filterViewableFriendGroups,
   updateFriendGroupSearch,
   filterViewableFriends,
   addFriendToFriends,
+  addFriendtoViewableFriends,
   toggleFriendsList,
   toggleFindFriends,
   toggleFriendGroups,

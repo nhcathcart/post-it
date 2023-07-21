@@ -2,7 +2,11 @@ import { useAppDispatch, useAppSelector } from "../hooks";
 import {
   filterViewableFriendGroups,
   filterViewableFriends,
+  loadFriendsList,
 } from "../reducers/friendsReducer";
+import { useEffect } from "react";
+import { v4 as uuid } from "uuid";
+import { loadPendingFriendsThunk, acceptFriendThunk, loadFriendsThunk } from "../reducers/friendsReducer";
 
 export default function FriendsList() {
   const dispatch = useAppDispatch();
@@ -10,12 +14,25 @@ export default function FriendsList() {
 
   const friendsList = state.viewableFriends.map((friend) => {
     return (
-      <div className="friend-bubble" key={friend}>
+      <div className="friend-bubble" key={uuid()}>
         <p>{friend}</p>
       </div>
     );
   });
-  
+  const pendingFrinedsList = state.pendingFriends.map((username: string) => {
+    return (
+      <div className="friend-bubble" key={uuid()}>
+        <p>{username}</p>
+        <button className="add-friend-button" onClick={() => {dispatch(acceptFriendThunk(username))}}>
+          Accept
+        </button>
+      </div>
+    );
+  });
+  useEffect(() => {
+    dispatch(loadPendingFriendsThunk())
+    dispatch(loadFriendsThunk())
+  }, []);
   return (
     <div className="friends-content-container">
       <div className="friends-list-container">
@@ -27,6 +44,10 @@ export default function FriendsList() {
           onChange={(e) => dispatch(filterViewableFriends(e.target.value))}
         />
         {friendsList}
+      </div>
+      <div className="friends-list-container">
+        <h3>Pending Friends</h3>
+        {pendingFrinedsList}
       </div>
       
     </div>
