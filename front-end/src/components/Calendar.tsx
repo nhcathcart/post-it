@@ -87,7 +87,7 @@ export function MyCalendar() {
               {view}
             </button>
           ))}
-          <ModalButton isDefault={true}>
+          <ModalButton isDefault={true} text="Add">
             <AddEventForm />
           </ModalButton>
         </div>

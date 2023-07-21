@@ -19,7 +19,7 @@ export default function FindFriends() {
       <div className="friend-bubble" key={uuid()}>
         <p>{username}</p>
         <button
-          className="add-friend-button"
+          className="friend-button"
           onClick={() => {
             dispatch(addFriendThunk(username));
           }}
@@ -33,7 +33,7 @@ export default function FindFriends() {
     return (
       <div className="friend-bubble" key={uuid()}>
         <p>{username}</p>
-        <button className="add-friend-button" onClick={() => {}}>
+        <button className="friend-button" onClick={() => {}}>
           Accept
         </button>
       </div>
