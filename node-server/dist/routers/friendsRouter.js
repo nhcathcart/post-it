@@ -28,4 +28,13 @@ router.post("/accept-friend-request", authController_1.default.checkCookie, frie
 router.post("/reject-friend-request", authController_1.default.checkCookie, friendsController_1.default.rejectFriendRequest, (req, res) => {
     return res.json("SUCCESS");
 });
+router.post("/create-friend-group", authController_1.default.checkCookie, (req, res) => {
+    return res.json("SUCCESS");
+});
+router.post("/add-friend-to-group", authController_1.default.checkCookie, (req, res) => {
+    return res.json("SUCCESS");
+});
+router.get("/get-friend-groups", authController_1.default.checkCookie, (req, res) => {
+    return res.json(res.locals.friendGroups);
+});
 exports.default = router;
