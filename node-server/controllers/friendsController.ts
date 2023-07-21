@@ -13,14 +13,31 @@ interface User {
 const friendsController = {
   search: async (req: Request, res: Response, next: NextFunction) => {
     const { searchTerm } = req.body;
-
+    const { username } = res.locals
     const query = `
-    SELECT username
-    FROM users
-    WHERE username ILIKE $1;
+    WITH user_info AS (
+      SELECT id AS user_id
+      FROM users
+      WHERE username = $1
+    )
+    SELECT u.username
+    FROM users u
+    WHERE u.username ILIKE $2
+      AND u.id != (SELECT user_id FROM user_info)
+      AND NOT EXISTS (
+        SELECT 1
+        FROM friend_requests fr
+        WHERE (fr.sender_id = u.id AND fr.receiver_id = (SELECT user_id FROM user_info))
+           OR (fr.receiver_id = u.id AND fr.sender_id = (SELECT user_id FROM user_info))
+      )
+      AND NOT EXISTS (
+        SELECT 1
+        FROM friends
+        WHERE (friends.user_id = (SELECT user_id FROM user_info) AND friends.friend_id = u.id)
+      );     
   `;
 
-    const values = [`%${searchTerm}%`];
+    const values = [username, `%${searchTerm}%`];
 
     try {
       const result = await db.query(query, values);
