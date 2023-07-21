@@ -7,6 +7,7 @@
 }
 .friends-content-container{
     display: flex;
+    justify-content: center;
     flex: 1;
     flex-direction: row;
     width: 80%;
@@ -19,7 +20,6 @@
   align-items: center;
   width: 50%;
   height: 100%;
-  padding-left: 5%;
 }
 .friend-bubble {
   display: flex;
@@ -71,7 +71,7 @@
 .friends-sidebar-button:active{
     transform: scale(.95);
 }
-.add-friend-button{
+.friend-button{
   width: fit-content; 
   border-radius: 20px;
   border: none;
@@ -81,9 +81,15 @@
   font-family: inherit;
 }
 
-.add-friend-button:active{
+.friend-button:active{
   transform: scale(.95);
 }
-.add-friend-button:hover{
+.friend-button:hover{
   background-color: #5a7d7cff;
+}
+.friends-button-container{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  width: 100%;
 }

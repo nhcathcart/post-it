@@ -4,14 +4,14 @@ import "../css/Modal.css"
 import "../css/utility-css.css"
 
 
-export function ModalButton(props: { children: ReactNode, isDefault: boolean, cssClass?: string }) {
+export function ModalButton(props: { children: ReactNode, isDefault: boolean, text: string, cssClass?: string}) {
   const [showModal, setShowModal] = useState(false);
-  const { isDefault, cssClass } = props;
+  const { isDefault, cssClass, text } = props;
 
   return (
     <>
       <button className={isDefault? "button modal-button" : cssClass} onClick={() => setShowModal(true)}>
-        Add
+        {text}
       </button>
       <Modal isVisible={showModal} onClose={() => setShowModal(false)}>
         {props.children}

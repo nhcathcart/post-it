@@ -7,6 +7,8 @@ import {
 import { useEffect } from "react";
 import { v4 as uuid } from "uuid";
 import { loadPendingFriendsThunk, acceptFriendThunk, loadFriendsThunk } from "../reducers/friendsReducer";
+import { ModalButton } from "./ModalButton"
+import { FriendsPending } from "./FriendsPending";
 
 export default function FriendsList() {
   const dispatch = useAppDispatch();
@@ -36,6 +38,11 @@ export default function FriendsList() {
   return (
     <div className="friends-content-container">
       <div className="friends-list-container">
+        <div className="friends-button-container">
+          <ModalButton isDefault={false} cssClass="friend-button" text="Friend Requests">
+            <FriendsPending/>
+          </ModalButton>
+        </div>
         <h3>Friends</h3>
         <input
           type="text"
@@ -45,10 +52,10 @@ export default function FriendsList() {
         />
         {friendsList}
       </div>
-      <div className="friends-list-container">
+      {/* <div className="friends-list-container">
         <h3>Pending Friends</h3>
         {pendingFrinedsList}
-      </div>
+      </div> */}
       
     </div>
   );
