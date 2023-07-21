@@ -1,6 +1,5 @@
 import { useAppDispatch, useAppSelector } from "../hooks";
 import {
-  filterViewableFriendGroups,
   filterViewableFriends,
   loadFriendsList,
 } from "../reducers/friendsReducer";

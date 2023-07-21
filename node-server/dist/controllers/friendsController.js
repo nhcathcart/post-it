@@ -207,7 +207,7 @@ const friendsController = {
     createFriendGroup: (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
         const { username } = res.locals;
         const { friendGroup } = req.body;
-        const query = `
+        const queryWithFriends = `
       WITH user_info AS (
         SELECT id AS owner_id
         FROM users
@@ -223,11 +223,29 @@ const friendsController = {
       FROM new_group, users
       WHERE users.username = ANY($3::text[])
     `;
-        const values = [username, friendGroup.name, friendGroup.friends];
+        const noFriendsQuery = `
+      WITH user_info AS (
+        SELECT id AS owner_id
+        FROM users
+        WHERE username = $1
+      ),
+      INSERT INTO friend_groups (group_name, owner_id)
+      SELECT $2, owner_id FROM user_info
+
+    `;
+        const valuesWithFriends = [username, friendGroup.name, friendGroup.friends];
+        const noFriendsValues = [username, friendGroup.name];
         try {
-            yield db_1.default.query(query, values);
-            res.locals.success = "SUCCESS";
-            return next();
+            if (friendGroup.friends.length > 0) {
+                yield db_1.default.query(queryWithFriends, valuesWithFriends);
+                res.locals.success = "SUCCESS";
+                return next();
+            }
+            else {
+                yield db_1.default.query(noFriendsQuery, noFriendsValues);
+                res.locals.success = "SUCCESS";
+                return next();
+            }
         }
         catch (err) {
             const errorObj = {

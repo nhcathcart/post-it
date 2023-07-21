@@ -93,3 +93,21 @@
   justify-content: flex-end;
   width: 100%;
 }
+.form-container {
+  display: flex;
+  flex-direction: column;
+  align-self: center;
+  align-items: center;
+  justify-content: space-around;
+  height: 90%;
+  width: 80%;
+  border: none;
+  color: black;
+}
+.form-input {
+  width: 100%;
+  border-radius: 20px;
+  padding: 2%;
+  border: 1px solid #ccc;
+  font-family: inherit;
+}
