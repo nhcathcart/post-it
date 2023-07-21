@@ -22,11 +22,18 @@
   padding-left: 5%;
 }
 .friend-bubble {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
   font-size: 10px;
   border-radius: 20px;
   border: 1px solid #ccc;
   width: 100%;
-  padding-left: 5%;
+  padding-top: 2%;
+  padding-bottom: 2%;
+  padding-right: 6%;
+  padding-left: 6%;
 }
 .friend-search-input {
   width: 60%;
@@ -63,4 +70,20 @@
 }
 .friends-sidebar-button:active{
     transform: scale(.95);
+}
+.add-friend-button{
+  width: fit-content; 
+  border-radius: 20px;
+  border: none;
+  padding: 2%;
+  background-color: #6c9594;
+  color: #ffffff;
+  font-family: inherit;
+}
+
+.add-friend-button:active{
+  transform: scale(.95);
+}
+.add-friend-button:hover{
+  background-color: #5a7d7cff;
 }

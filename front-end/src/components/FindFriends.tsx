@@ -3,6 +3,7 @@ import "../css/FriendsPage.css";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import { updateFriendSearch, friendSearchThunk } from "../reducers/friendsReducer";
 import { v4 as uuid,} from 'uuid';
+import { ModalButton } from "./ModalButton";
 
 
 export default function FindFriends() {
@@ -12,6 +13,10 @@ export default function FindFriends() {
     return (
       <div className="friend-bubble" key={uuid()}>
         <p>{username}</p>
+        <ModalButton isDefault={false} cssClass={"add-friend-button"}>
+          
+        </ModalButton>
+        <button className="add-friend-button">Add</button>
       </div>
     );
   });

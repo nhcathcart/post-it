@@ -7,7 +7,7 @@ dotenv.config();
 
 const secretKey = process.env.JWT_PRIVATE_KEY;
 interface User {
-  username: string
+  username: string;
 }
 
 const friendsController = {
@@ -24,7 +24,9 @@ const friendsController = {
 
     try {
       const result = await db.query(query, values);
-      const usernameArray = result.rows.map((userObj: User) => userObj.username); // Access the 'username' property
+      const usernameArray = result.rows.map(
+        (userObj: User) => userObj.username
+      ); // Access the 'username' property
 
       res.locals.searchResults = usernameArray; // Store the array of usernames in 'searchResults'
       return next();
@@ -70,24 +72,22 @@ const friendsController = {
   addFriend: async (req: Request, res: Response, next: NextFunction) => {
     const { username } = res.locals;
     const { friend } = req.body;
-
+  
     const query = `
-    INSERT INTO friends (user_id, friend_id)
-    SELECT u1.id AS user_id, u2.id AS friend_id
-    FROM users AS u1, users AS u2
-    WHERE u1.username = $1
-      AND u2.username = $2;
-    
-        `;
+      INSERT INTO friend_requests (sender_id, receiver_id)
+      SELECT u1.id AS sender_id, u2.id AS receiver_id
+      FROM users AS u1, users AS u2
+      WHERE u1.username = $1
+        AND u2.username = $2;
+    `;
     const values = [username, friend];
-
+  
     try {
-      const result = await db.query(query, values);
-      res.locals.addResult = result.rows;
+      await db.query(query, values);
       return next();
     } catch (err) {
       const errorObj = {
-        log: `There was an error in the friendsController.addFriend middleware: ${err}`,
+        log: `There was an error in the addFriend middleware: ${err}`,
         status: 500,
         message: {
           err: `There was a problem adding friends`,
@@ -96,6 +96,54 @@ const friendsController = {
       next(errorObj);
     }
   },
+  acceptFriendRequest: async (req: Request, res: Response, next: NextFunction) => {
+    const { username } = res.locals;
+    const { friend, accept } = req.body;
+  
+    try {
+      if (accept === true) {
+        // Insert two records into the friends table for the accepted friendship
+        const insertQuery = `
+          WITH inserted AS (
+            INSERT INTO friends (user_id, friend_id)
+            SELECT u1.id AS user_id, u2.id AS friend_id
+            FROM users AS u1, users AS u2
+            WHERE u1.username = $1
+              AND u2.username = $2
+            RETURNING user_id, friend_id
+          )
+          INSERT INTO friends (user_id, friend_id)
+          SELECT friend_id AS user_id, user_id AS friend_id
+          FROM inserted inserted;
+        `;
+        const values = [username, friend];
+        await db.query(insertQuery, values);
+      }
+  
+      // Delete the friend request record
+      const deleteQuery = `
+        DELETE FROM friend_requests
+        WHERE sender_id = (SELECT id FROM users WHERE username = $1)
+          AND receiver_id = (SELECT id FROM users WHERE username = $2);
+      `;
+      const deleteValues = [friend, username];
+      await db.query(deleteQuery, deleteValues);
+  
+      res.locals.acceptedFriend = friend;
+      return next();
+    } catch (err) {
+      const errorObj = {
+        log: `There was an error in the acceptFriendRequest middleware: ${err}`,
+        status: 500,
+        message: {
+          err: `There was a problem accepting the friend request.`,
+        },
+      };
+      next(errorObj);
+    }
+  }
+  
+    
 };
 
 export default friendsController;
