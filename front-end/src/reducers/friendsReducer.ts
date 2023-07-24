@@ -1,6 +1,14 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { Event } from "react-big-calendar";
-import { friendSearch, addFriend, loadFriends, loadPendingFriends, acceptFriend } from "../services/friendsService";
+import {
+  friendSearch,
+  addFriend,
+  loadFriends,
+  loadPendingFriends,
+  acceptFriend,
+  addFriendGroup,
+} from "../services/friendsService";
+import FriendGroup from "../components/FriendGroups";
 
 interface FriendState {
   friendSearch: "";
@@ -8,10 +16,14 @@ interface FriendState {
   friends: string[];
   pendingFriends: string[];
   viewableFriends: string[];
-  friendGroupSearch: string;
-  friendGroups: string[];
-  viewableFriendGroups: string[];
+  newFriendGroup: FriendGroup;
+  friendGroups: FriendGroup[];
   friendsView: FriendsView;
+}
+
+interface FriendGroup {
+  name: string;
+  friends: string[]
 }
 
 interface FriendsView {
@@ -26,9 +38,8 @@ const initialState: FriendState = {
   friends: [],
   pendingFriends: [],
   viewableFriends: [],
-  friendGroupSearch: "",
-  friendGroups: ["The Crew", "Classon House", "Dinner Party", "BBQ"],
-  viewableFriendGroups: ["The Crew", "Classon House", "Dinner Party", "BBQ"],
+  newFriendGroup: {name: '', friends:[]},
+  friendGroups: [],
   friendsView: {
     friendsList: true,
     friendGroups: false,
@@ -45,7 +56,7 @@ export const friendSearchThunk = createAsyncThunk(
       thunkAPI.dispatch(updateFindFriendList(response));
       return response;
     } catch (error) {
-      console.log('caught error:', error);
+      console.log("caught error:", error);
       throw new Error("Problems finding friends");
     }
   }
@@ -54,54 +65,66 @@ export const friendSearchThunk = createAsyncThunk(
 export const addFriendThunk = createAsyncThunk(
   "/api/friends/add-friend",
   async (username: string, thunkAPI) => {
-    try{
+    try {
       const response = await addFriend(username);
       if (response === "There was a problem") throw "Problems adding friend";
       return "SUCCESS";
-    }catch(error){
-      return thunkAPI.rejectWithValue(error)
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
     }
   }
-)
+);
 export const acceptFriendThunk = createAsyncThunk(
   "/api/friends/accept-friend-request",
   async (username: string, thunkAPI) => {
-    try{
+    try {
       const response = await acceptFriend(username);
       if (response === "There was a problem") throw "Problems accepting friend";
-      thunkAPI.dispatch(addFriendToFriends(username))
-      thunkAPI.dispatch(addFriendtoViewableFriends(username))
+      thunkAPI.dispatch(addFriendToFriends(username));
+      thunkAPI.dispatch(addFriendtoViewableFriends(username));
       return "SUCCESS";
-    }catch(error){
-      return thunkAPI.rejectWithValue(error)
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
     }
   }
-)
+);
 export const loadFriendsThunk = createAsyncThunk(
   "/api/friends/get-friends",
   async (_, thunkAPI) => {
-    try{
+    try {
       const response = await loadFriends();
       if (response === "There was a problem") throw "Problems getting friends";
-      thunkAPI.dispatch(loadFriendsList(response))
-      thunkAPI.dispatch(loadViewableFriendsList(response))
-    }catch(error){
-      return thunkAPI.rejectWithValue(error)
+      thunkAPI.dispatch(loadFriendsList(response));
+      thunkAPI.dispatch(loadViewableFriendsList(response));
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
     }
   }
-)
+);
 export const loadPendingFriendsThunk = createAsyncThunk(
   "/api/friends/get-pending-friends",
   async (_, thunkAPI) => {
-    try{
+    try {
       const response = await loadPendingFriends();
-      if (response === "There was a problem") throw "Problems getting pending friends";
-      thunkAPI.dispatch(loadPendingFriendsList(response))
-    }catch(error){
-      return thunkAPI.rejectWithValue(error)
+      if (response === "There was a problem")
+        throw "Problems getting pending friends";
+      thunkAPI.dispatch(loadPendingFriendsList(response));
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
     }
   }
-)
+);
+export const addFriendGroupThunk = createAsyncThunk(
+  "/api/friends/add-friend-group",
+  async (groupObj: { name: string; friends: string[] }, thunkAPI) => {
+    try {
+      const response = await addFriendGroup(groupObj);
+      thunkAPI.dispatch(addGroupToFriendGroups(groupObj));
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
 //helpers
 function filterByPrefix(strings: string[], search: string): string[] {
   const lowercasedSearch = search.toLowerCase();
@@ -118,34 +141,37 @@ export const friendsSlice = createSlice({
       state.friendSearch = action.payload;
     },
     updateFindFriendList: (state, action) => {
-      state.findFriendsList = action.payload
+      state.findFriendsList = action.payload;
     },
     filterViewableFriends: (state, action) => {
       state.viewableFriends = filterByPrefix(state.friends, action.payload);
     },
-    updateFriendGroupSearch: (state, action) => {
-      state.friendGroupSearch = action.payload;
-    },
-    filterViewableFriendGroups: (state, action) => {
-      state.viewableFriendGroups = filterByPrefix(
-        state.friendGroups,
-        action.payload
-      );
-    },
     addFriendToFriends: (state, action) => {
-      state.friends.push(action.payload)
+      state.friends.push(action.payload);
+    },
+    updateNewGroupName: (state, action) => {
+      state.newFriendGroup.name = action.payload
+    },
+    addNewGroupFriend: (state, action) =>{
+      state.newFriendGroup.friends.push(action.payload)
+    },
+    removeNewGroupFriend: (state, action) => {
+      state.newFriendGroup.friends = state.newFriendGroup.friends.filter((item) => item !== action.payload)
+    },
+    addGroupToFriendGroups: (state, action) => {
+      state.friendGroups.push(action.payload)
     },
     addFriendtoViewableFriends: (state, action) => {
-      state.viewableFriends.push(action.payload)
+      state.viewableFriends.push(action.payload);
     },
     loadFriendsList: (state, action) => {
-      state.friends = action.payload
+      state.friends = action.payload;
     },
     loadViewableFriendsList: (state, action) => {
-      state.viewableFriends = action.payload
+      state.viewableFriends = action.payload;
     },
     loadPendingFriendsList: (state, action) => {
-      state.pendingFriends = action.payload
+      state.pendingFriends = action.payload;
     },
     toggleFriendsList(state) {
       state.friendsView.friendsList = true;
@@ -171,14 +197,14 @@ export const {
   loadFriendsList,
   loadViewableFriendsList,
   loadPendingFriendsList,
-  filterViewableFriendGroups,
-  updateFriendGroupSearch,
+  addGroupToFriendGroups,
   filterViewableFriends,
   addFriendToFriends,
   addFriendtoViewableFriends,
   toggleFriendsList,
   toggleFindFriends,
   toggleFriendGroups,
+  updateNewGroupName,
 } = friendsSlice.actions;
 
 export default friendsSlice.reducer;

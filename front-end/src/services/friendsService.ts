@@ -63,7 +63,6 @@ export async function loadFriends() {
   return responseParsed;
 }
 export async function loadPendingFriends() {
-  console.log('here')
   const response = await fetch("/api/friends/get-pending-friends", {
     method: "GET",
     credentials: "include",
@@ -74,9 +73,27 @@ export async function loadPendingFriends() {
   const responseParsed = await response.json();
   console.log(responseParsed)
   if (response.status >= 400) {
-    console.log('In error thing')
     console.log("caught error:", responseParsed);
     throw new Error("Problems finding friends");
+  }
+
+  return responseParsed;
+}
+
+export async function addFriendGroup(groupObj: {name: string, friends: string[]}){
+  const response = await fetch("/api/friends/add-friend-group", {
+    method: "POST",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(groupObj)
+  })
+  const responseParsed = await response.json();
+  console.log(responseParsed)
+  if (response.status >= 400) {
+    console.log("caught error:", responseParsed);
+    throw new Error("Problems adding friend group");
   }
 
   return responseParsed;

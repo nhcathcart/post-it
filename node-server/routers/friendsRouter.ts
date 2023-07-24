@@ -53,5 +53,14 @@ router.post(
     return res.json("SUCCESS");
   }
 );
+router.post("/add-friend-group", authController.checkCookie, friendsController.createFriendGroup, (req, res) => {
+  return res.json("SUCCESS")
+})
+router.post("/add-friend-to-group", authController.checkCookie, (req, res) => {
+  return res.json("SUCCESS")
+})
+router.get("/get-friend-groups", authController.checkCookie, (req, res) => {
+  return res.json(res.locals.friendGroups)
+})
 
 export default router;
