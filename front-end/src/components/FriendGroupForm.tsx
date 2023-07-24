@@ -12,14 +12,17 @@ export default function FriendGroupForm() {
 
   return (
     <div className="form-container">
-      <input
-        type="text"
-        placeholder="Group Name"
-        className="form-input"
-        onChange={(e) => {
-          dispatch(updateNewGroupName(e.target.value));
-        }}
-      />
+      <div className="form-container-inner">
+        <label>Group-Name</label>
+        <input
+          type="text"
+          placeholder="Group Name"
+          className="form-input"
+          onChange={(e) => {
+            dispatch(updateNewGroupName(e.target.value));
+          }}
+        />
+      </div>
       <button
         className="button"
         style={{ width: "50%" }}

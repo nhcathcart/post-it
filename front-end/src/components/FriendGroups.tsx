@@ -5,15 +5,14 @@ import FriendGroupForm from "./FriendGroupForm";
 import { useEffect } from "react";
 import { v4 as uuid } from "uuid";
 import { getFriendGroupsThunk } from "../reducers/friendsReducer"
+import { FriendGroupBubble } from "./FriendGroupBubble";
 
 export default function FriendGroup() {
   const dispatch = useAppDispatch();
   const state = useAppSelector((state) => state.friends);
   const friendGroupsList = state.friendGroups.map((friendGroup) => {
     return (
-      <div className="friend-bubble" key={uuid()}>
-        <p>{friendGroup.name}</p>
-      </div>
+      <FriendGroupBubble key={uuid()} title={friendGroup.name}/>
     );
   });
 
