@@ -273,8 +273,8 @@ const friendsController = {
         const values = [username];
         try {
             const result = yield db_1.default.query(query, values);
-            const friend_groups = result.rows.map((row) => row.owner_id);
-            res.locals.friend_groups = friend_groups;
+            const friendGroups = result.rows.map((row) => { return { name: row.group_name, "friends": [] }; });
+            res.locals.friendGroups = friendGroups;
             return next();
         }
         catch (err) {
