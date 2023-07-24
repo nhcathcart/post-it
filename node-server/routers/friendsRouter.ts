@@ -53,7 +53,7 @@ router.post(
     return res.json("SUCCESS");
   }
 );
-router.post("/create-friend-group", authController.checkCookie, friendsController.createFriendGroup, (req, res) => {
+router.post("/add-friend-group", authController.checkCookie, friendsController.createFriendGroup, (req, res) => {
   return res.json("SUCCESS")
 })
 router.post("/add-friend-to-group", authController.checkCookie, (req, res) => {

@@ -206,7 +206,7 @@ const friendsController = {
     }),
     createFriendGroup: (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
         const { username } = res.locals;
-        const { friendGroup } = req.body;
+        const { name, friends } = req.body;
         const queryWithFriends = `
       WITH user_info AS (
         SELECT id AS owner_id
@@ -228,15 +228,15 @@ const friendsController = {
         SELECT id AS owner_id
         FROM users
         WHERE username = $1
-      ),
+      )
       INSERT INTO friend_groups (group_name, owner_id)
-      SELECT $2, owner_id FROM user_info
-
+      SELECT $2, owner_id
+      FROM user_info;
     `;
-        const valuesWithFriends = [username, friendGroup.name, friendGroup.friends];
-        const noFriendsValues = [username, friendGroup.name];
+        const valuesWithFriends = [username, name, friends];
+        const noFriendsValues = [username, name];
         try {
-            if (friendGroup.friends.length > 0) {
+            if (friends.length > 0) {
                 yield db_1.default.query(queryWithFriends, valuesWithFriends);
                 res.locals.success = "SUCCESS";
                 return next();
@@ -253,6 +253,36 @@ const friendsController = {
                 status: 500,
                 message: {
                     err: `There was a problem creating that friend group.`,
+                },
+            };
+            next(errorObj);
+        }
+    }),
+    getFriendGroups: (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+        const { username } = res.locals;
+        const query = `
+      WITH user_info AS (
+        SELECT id AS owner_id
+        FROM users
+        WHERE username = $1
+      )
+      SELECT *
+      FROM friend_groups 
+      WHERE owner_id = (SELECT owner_id FROM user_info);    
+    `;
+        const values = [username];
+        try {
+            const result = yield db_1.default.query(query, values);
+            const friend_groups = result.rows.map((row) => row.owner_id);
+            res.locals.friend_groups = friend_groups;
+            return next();
+        }
+        catch (err) {
+            const errorObj = {
+                log: `There was an error in the getFriendGroups middleware: ${err}`,
+                status: 500,
+                message: {
+                    err: `There was a problem getting friend groups.`,
                 },
             };
             next(errorObj);

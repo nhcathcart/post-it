@@ -8,6 +8,7 @@ import {
   acceptFriend,
   addFriendGroup,
 } from "../services/friendsService";
+import FriendGroup from "../components/FriendGroups";
 
 interface FriendState {
   friendSearch: "";
@@ -15,7 +16,7 @@ interface FriendState {
   friends: string[];
   pendingFriends: string[];
   viewableFriends: string[];
-  newFriendGroup: string;
+  newFriendGroup: FriendGroup;
   friendGroups: FriendGroup[];
   friendsView: FriendsView;
 }
@@ -37,7 +38,7 @@ const initialState: FriendState = {
   friends: [],
   pendingFriends: [],
   viewableFriends: [],
-  newFriendGroup: "",
+  newFriendGroup: {name: '', friends:[]},
   friendGroups: [],
   friendsView: {
     friendsList: true,
@@ -148,8 +149,14 @@ export const friendsSlice = createSlice({
     addFriendToFriends: (state, action) => {
       state.friends.push(action.payload);
     },
-    updateNewGroup: (state, action) => {
-      state.newFriendGroup = action.payload
+    updateNewGroupName: (state, action) => {
+      state.newFriendGroup.name = action.payload
+    },
+    addNewGroupFriend: (state, action) =>{
+      state.newFriendGroup.friends.push(action.payload)
+    },
+    removeNewGroupFriend: (state, action) => {
+      state.newFriendGroup.friends = state.newFriendGroup.friends.filter((item) => item !== action.payload)
     },
     addGroupToFriendGroups: (state, action) => {
       state.friendGroups.push(action.payload)
@@ -197,7 +204,7 @@ export const {
   toggleFriendsList,
   toggleFindFriends,
   toggleFriendGroups,
-  updateNewGroup,
+  updateNewGroupName,
 } = friendsSlice.actions;
 
 export default friendsSlice.reducer;

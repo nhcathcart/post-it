@@ -28,7 +28,7 @@ router.post("/accept-friend-request", authController_1.default.checkCookie, frie
 router.post("/reject-friend-request", authController_1.default.checkCookie, friendsController_1.default.rejectFriendRequest, (req, res) => {
     return res.json("SUCCESS");
 });
-router.post("/create-friend-group", authController_1.default.checkCookie, friendsController_1.default.createFriendGroup, (req, res) => {
+router.post("/add-friend-group", authController_1.default.checkCookie, friendsController_1.default.createFriendGroup, (req, res) => {
     return res.json("SUCCESS");
 });
 router.post("/add-friend-to-group", authController_1.default.checkCookie, (req, res) => {
