@@ -7,6 +7,7 @@ import {
   loadPendingFriends,
   acceptFriend,
   addFriendGroup,
+  getFriendGroups
 } from "../services/friendsService";
 import FriendGroup from "../components/FriendGroups";
 
@@ -56,7 +57,6 @@ export const friendSearchThunk = createAsyncThunk(
       thunkAPI.dispatch(updateFindFriendList(response));
       return response;
     } catch (error) {
-      console.log("caught error:", error);
       throw new Error("Problems finding friends");
     }
   }
@@ -125,6 +125,17 @@ export const addFriendGroupThunk = createAsyncThunk(
     }
   }
 );
+export const getFriendGroupsThunk = createAsyncThunk(
+  "/api/friends/get-friend-groups",
+  async (_, thunkAPI) => {
+    try {
+      const response = await getFriendGroups();
+      thunkAPI.dispatch(loadFriendGroups(response));
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error)
+    }
+  }
+)
 //helpers
 function filterByPrefix(strings: string[], search: string): string[] {
   const lowercasedSearch = search.toLowerCase();
@@ -154,6 +165,9 @@ export const friendsSlice = createSlice({
     },
     addNewGroupFriend: (state, action) =>{
       state.newFriendGroup.friends.push(action.payload)
+    },
+    loadFriendGroups: (state, action) => {
+      state.friendGroups = action.payload;
     },
     removeNewGroupFriend: (state, action) => {
       state.newFriendGroup.friends = state.newFriendGroup.friends.filter((item) => item !== action.payload)
@@ -205,6 +219,7 @@ export const {
   toggleFindFriends,
   toggleFriendGroups,
   updateNewGroupName,
+  loadFriendGroups,
 } = friendsSlice.actions;
 
 export default friendsSlice.reducer;

@@ -286,7 +286,6 @@ const friendsController = {
     next: NextFunction
   ) => {
     const { username } = res.locals;
-    
     const query = `
       WITH user_info AS (
         SELECT id AS owner_id
@@ -301,8 +300,9 @@ const friendsController = {
     const values = [username];
     try {
       const result = await db.query(query, values);
-      const friend_groups = result.rows.map((row) => row.owner_id);
-      res.locals.friend_groups = friend_groups;
+      const friendGroups = result.rows.map((row) => {return {name: row.group_name, "friends": []}});
+      res.locals.friendGroups = friendGroups;
+  
       return next();
     } catch (err) {
       const errorObj = {

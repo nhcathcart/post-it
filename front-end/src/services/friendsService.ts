@@ -1,5 +1,4 @@
 export async function friendSearch(searchTerm: string) {
-  console.log("search term is: ", searchTerm);
   const response = await fetch("/api/friends/search", {
     method: "POST",
     credentials: "include",
@@ -12,7 +11,6 @@ export async function friendSearch(searchTerm: string) {
 
   if (response.status >= 400) {
     // Handle server errors here (e.g., throw an error)
-    console.log("caught error:", responseParsed);
     throw new Error("Problems finding friends");
   }
 
@@ -71,9 +69,7 @@ export async function loadPendingFriends() {
     },
   });
   const responseParsed = await response.json();
-  console.log(responseParsed)
   if (response.status >= 400) {
-    console.log("caught error:", responseParsed);
     throw new Error("Problems finding friends");
   }
 
@@ -90,11 +86,25 @@ export async function addFriendGroup(groupObj: {name: string, friends: string[]}
     body: JSON.stringify(groupObj)
   })
   const responseParsed = await response.json();
-  console.log(responseParsed)
   if (response.status >= 400) {
-    console.log("caught error:", responseParsed);
     throw new Error("Problems adding friend group");
   }
 
+  return responseParsed;
+}
+
+export async function getFriendGroups(){
+  const response = await fetch("/api/friends/get-friend-groups", {
+    method: "GET",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  const responseParsed = await response.json();
+  if (response.status >= 400) {
+    throw new Error("Problems getting friend groups");
+  }
+  
   return responseParsed;
 }

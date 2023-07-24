@@ -34,7 +34,7 @@ router.post("/add-friend-group", authController_1.default.checkCookie, friendsCo
 router.post("/add-friend-to-group", authController_1.default.checkCookie, (req, res) => {
     return res.json("SUCCESS");
 });
-router.get("/get-friend-groups", authController_1.default.checkCookie, (req, res) => {
+router.get("/get-friend-groups", authController_1.default.checkCookie, friendsController_1.default.getFriendGroups, (req, res) => {
     return res.json(res.locals.friendGroups);
 });
 exports.default = router;
