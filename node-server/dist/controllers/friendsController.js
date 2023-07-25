@@ -329,5 +329,29 @@ const friendsController = {
             next(errorObj);
         }
     }),
+    removeFriendFromGroup: (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+        const { username } = res.locals;
+        const { name, friendToRemove } = req.body;
+        const query = `
+      DELETE FROM group_members
+      WHERE group_id = (SELECT id FROM friend_groups WHERE group_name = $2 AND owner_id = (SELECT id FROM users WHERE username = $1))
+      AND user_id = (SELECT id FROM users WHERE username = $3);
+    `;
+        const values = [username, name, friendToRemove];
+        try {
+            yield db_1.default.query(query, values);
+            return next();
+        }
+        catch (err) {
+            const errorObj = {
+                log: `There was an error in the removeFriendFromGroup middleware: ${err}`,
+                status: 500,
+                message: {
+                    err: `There was a problem removing the friend from the group`,
+                },
+            };
+            next(errorObj);
+        }
+    }),
 };
 exports.default = friendsController;
