@@ -355,6 +355,32 @@ const friendsController = {
       next(errorObj);
     }
   },
+  removeFriendFromGroup: async (req: Request, res: Response, next: NextFunction) => {
+    const { username } = res.locals;
+    const { name, friendToRemove } = req.body;
+
+    const query = `
+      DELETE FROM group_members
+      WHERE group_id = (SELECT id FROM friend_groups WHERE group_name = $2 AND owner_id = (SELECT id FROM users WHERE username = $1))
+      AND user_id = (SELECT id FROM users WHERE username = $3);
+    `;
+    const values = [username, name, friendToRemove];
+
+    try {
+        await db.query(query, values);
+        return next();
+    } catch (err) {
+        const errorObj = {
+            log: `There was an error in the removeFriendFromGroup middleware: ${err}`,
+            status: 500,
+            message: {
+                err: `There was a problem removing the friend from the group`,
+            },
+        };
+        next(errorObj);
+    }
+},
+
 };
 
 export default friendsController;
