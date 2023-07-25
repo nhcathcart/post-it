@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { Event } from "react-big-calendar";
 import {
   friendSearch,
+  friendSearchAll,
   addFriend,
   loadFriends,
   loadPendingFriends,
@@ -54,6 +55,18 @@ export const friendSearchThunk = createAsyncThunk(
   async (searchTerm: string, thunkAPI) => {
     try {
       const response = await friendSearch(searchTerm);
+      thunkAPI.dispatch(updateFindFriendList(response));
+      return response;
+    } catch (error) {
+      throw new Error("Problems finding friends");
+    }
+  }
+);
+export const friendSearchAllThunk = createAsyncThunk(
+  "/api/friends/search-all",
+  async (searchTerm: string, thunkAPI) => {
+    try {
+      const response = await friendSearchAll(searchTerm);
       thunkAPI.dispatch(updateFindFriendList(response));
       return response;
     } catch (error) {
@@ -220,6 +233,8 @@ export const {
   toggleFriendGroups,
   updateNewGroupName,
   loadFriendGroups,
+  addNewGroupFriend,
+  removeNewGroupFriend
 } = friendsSlice.actions;
 
 export default friendsSlice.reducer;

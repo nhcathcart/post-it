@@ -13,6 +13,14 @@ router.post(
   }
 );
 router.post(
+  "/search-all",
+  authController.checkCookie,
+  friendsController.searchAll,
+  (req,res) => {
+    return res.json(res.locals.searchResultsAll)
+  }
+)
+router.post(
   "/add-friend",
   authController.checkCookie,
   friendsController.addFriend,

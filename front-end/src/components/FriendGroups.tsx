@@ -12,7 +12,7 @@ export default function FriendGroup() {
   const state = useAppSelector((state) => state.friends);
   const friendGroupsList = state.friendGroups.map((friendGroup) => {
     return (
-      <FriendGroupBubble key={uuid()} title={friendGroup.name}/>
+      <FriendGroupBubble key={uuid()} title={friendGroup.name} children={friendGroup.friends}/>
     );
   });
 

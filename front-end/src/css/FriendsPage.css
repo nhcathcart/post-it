@@ -24,6 +24,7 @@
 .friend-bubble {
   display: flex;
   flex-direction: column;
+  box-sizing: border-box;
   align-items: flex-start;
   justify-content: space-between;
   font-size: 10px;
@@ -131,4 +132,30 @@
   display: flex;
   justify-content: space-between;
   width: 100%;
+}
+.staged-friend-container{
+  display: flex;
+  flex-direction: row;
+  margin-top: 2%;
+  
+}
+.staged-friend-bubble{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  padding-right: 20px;
+  padding-left: 20px;
+  font-size: 10px;
+  width: fit-content;
+  border: 1px solid #ccc;
+  font-family: inherit;
+  border-radius: 20px;
+}
+.expand-container{
+  flex-direction: column;
+  height: 200px;
+  justify-content: space-around;
+  width: 100%;
+  flex-shrink: 1;
+  box-sizing: border-box;
 }
