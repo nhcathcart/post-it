@@ -56,7 +56,7 @@ export async function acceptFriend(username: string) {
     },
     body: JSON.stringify({ friend: username }),
   });
-  
+
   const responseParsed = await response.json();
   if (response.status >= 400) {
     throw new Error("Problems accepting friend request");
@@ -94,15 +94,18 @@ export async function loadPendingFriends() {
   return responseParsed;
 }
 
-export async function addFriendGroup(groupObj: {name: string, friends: string[]}){
+export async function addFriendGroup(groupObj: {
+  name: string;
+  friends: string[];
+}) {
   const response = await fetch("/api/friends/add-friend-group", {
     method: "POST",
     credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(groupObj)
-  })
+    body: JSON.stringify(groupObj),
+  });
   const responseParsed = await response.json();
   if (response.status >= 400) {
     throw new Error("Problems adding friend group");
@@ -111,7 +114,7 @@ export async function addFriendGroup(groupObj: {name: string, friends: string[]}
   return responseParsed;
 }
 
-export async function getFriendGroups(){
+export async function getFriendGroups() {
   const response = await fetch("/api/friends/get-friend-groups", {
     method: "GET",
     credentials: "include",
@@ -123,6 +126,21 @@ export async function getFriendGroups(){
   if (response.status >= 400) {
     throw new Error("Problems getting friend groups");
   }
-  
+  return responseParsed;
+}
+
+export async function removeFriendFromGroup(groupObj: { name: string, friendToRemove: string}){
+  const response = await fetch("/api/friends/remove-friend-from-group", {
+    method: "DELETE",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(groupObj)
+  })
+  const responseParsed = await response.json();
+  if (response.status >= 400) {
+    throw new Error("Problems getting friend groups");
+  }
   return responseParsed;
 }
