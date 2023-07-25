@@ -1,6 +1,7 @@
 import { ReactNode, useState } from "react";
 import "../css/FriendsPage.css";
 import "../css/utility-css.css";
+import { v4 as uuid } from "uuid";
 import { useAppDispatch } from "../hooks";
 import {
   removeFriendFromGroupThunk,
@@ -17,7 +18,7 @@ export function FriendGroupBubble(props: {
   const dispatch = useAppDispatch();
   const friendsList = children?.map((username) => {
     return (
-      <div className="friend-bubble">
+      <div className="friend-bubble" key={uuid()}>
         <div className="title-and-button-container">
           <p>{username}</p>
           <button

@@ -17,7 +17,7 @@ export default function FriendGroupForm() {
   const newGroupFriends = state.newFriendGroup.friends.map(
     (username: string) => {
       return (
-        <div className="staged-friend-bubble">
+        <div className="staged-friend-bubble" key={uuid()}>
           <p>{username}</p>
           <button className="expand-button" onClick={()=>{dispatch(removeNewGroupFriend(username))}}>
             <svg
