@@ -82,12 +82,26 @@
   color: #ffffff;
   font-family: inherit;
 }
-
 .friend-button:active{
   transform: scale(.95);
 }
 .friend-button:hover{
   background-color: #5a7d7cff;
+}
+.danger-button{
+  width: fit-content; 
+  border-radius: 20px;
+  border: none;
+  padding: 2%;
+  background-color: #8B0000;
+  color: #ffffff;
+  font-family: inherit;
+}
+.danger-button:active{
+  transform: scale(.95);
+}
+.danger-button:hover{
+  background-color: #ba0101;
 }
 .friends-button-container{
   display: flex;
@@ -153,7 +167,8 @@
 }
 .expand-container{
   flex-direction: column;
-  height: 200px;
+  height: fit-content;
+  padding: 5%;
   justify-content: space-around;
   width: 100%;
   flex-shrink: 1;

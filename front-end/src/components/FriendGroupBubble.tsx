@@ -2,7 +2,10 @@ import { ReactNode, useState } from "react";
 import "../css/FriendsPage.css";
 import "../css/utility-css.css";
 import { useAppDispatch } from "../hooks";
-import { removeFriendFromGroupThunk } from "../reducers/friendsReducer";
+import {
+  removeFriendFromGroupThunk,
+  deleteFriendGroupThunk,
+} from "../reducers/friendsReducer";
 
 export function FriendGroupBubble(props: {
   title: string;
@@ -75,7 +78,13 @@ export function FriendGroupBubble(props: {
         className="expand-container"
       >
         {friendsList}
-        <button className="friend-button">Add-Friend</button>
+        <button
+          className="danger-button"
+          style={{ marginTop: "5px" }}
+          onClick={() => dispatch(deleteFriendGroupThunk(title))}
+        >
+          Delete-Group
+        </button>
       </div>
     </div>
   );

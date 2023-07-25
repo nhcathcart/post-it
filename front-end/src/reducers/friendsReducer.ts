@@ -9,7 +9,8 @@ import {
   acceptFriend,
   addFriendGroup,
   getFriendGroups,
-  removeFriendFromGroup
+  removeFriendFromGroup,
+  deleteFriendGroup,
 } from "../services/friendsService";
 import FriendGroup from "../components/FriendGroups";
 
@@ -26,7 +27,7 @@ interface FriendState {
 
 interface FriendGroup {
   name: string;
-  friends: string[]
+  friends: string[];
 }
 
 interface FriendsView {
@@ -41,7 +42,7 @@ const initialState: FriendState = {
   friends: [],
   pendingFriends: [],
   viewableFriends: [],
-  newFriendGroup: {name: '', friends:[]},
+  newFriendGroup: { name: "", friends: [] },
   friendGroups: [],
   friendsView: {
     friendsList: true,
@@ -141,15 +142,20 @@ export const addFriendGroupThunk = createAsyncThunk(
 );
 export const removeFriendFromGroupThunk = createAsyncThunk(
   "/api/friends/remove-friend-from-group",
-  async (groupObj: { name: string, friendToRemove: string}, thunkAPI) => {
+  async (groupObj: { name: string; friendToRemove: string }, thunkAPI) => {
     try {
       const response = await removeFriendFromGroup(groupObj);
-      thunkAPI.dispatch(removeFriendfromGroupList({name: groupObj.name, friendToRemove: groupObj.friendToRemove}))
+      thunkAPI.dispatch(
+        removeFriendfromGroupList({
+          name: groupObj.name,
+          friendToRemove: groupObj.friendToRemove,
+        })
+      );
     } catch (error) {
-      return thunkAPI.rejectWithValue(error)
+      return thunkAPI.rejectWithValue(error);
     }
   }
-)
+);
 export const getFriendGroupsThunk = createAsyncThunk(
   "/api/friends/get-friend-groups",
   async (_, thunkAPI) => {
@@ -157,10 +163,21 @@ export const getFriendGroupsThunk = createAsyncThunk(
       const response = await getFriendGroups();
       thunkAPI.dispatch(loadFriendGroups(response));
     } catch (error) {
-      return thunkAPI.rejectWithValue(error)
+      return thunkAPI.rejectWithValue(error);
     }
   }
-)
+);
+export const deleteFriendGroupThunk = createAsyncThunk(
+  "/api/friends/delete-friend-group",
+  async (groupName: string, thunkAPI) => {
+    try {
+      const response = await deleteFriendGroup(groupName);
+      thunkAPI.dispatch(removeGroupFromGroupList(groupName));
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
 //helpers
 function filterByPrefix(strings: string[], search: string): string[] {
   const lowercasedSearch = search.toLowerCase();
@@ -186,29 +203,38 @@ export const friendsSlice = createSlice({
       state.friends.push(action.payload);
     },
     updateNewGroupName: (state, action) => {
-      state.newFriendGroup.name = action.payload
+      state.newFriendGroup.name = action.payload;
     },
-    addNewGroupFriend: (state, action) =>{
-      state.newFriendGroup.friends.push(action.payload)
+    addNewGroupFriend: (state, action) => {
+      state.newFriendGroup.friends.push(action.payload);
     },
     loadFriendGroups: (state, action) => {
       state.friendGroups = action.payload;
     },
     removeNewGroupFriend: (state, action) => {
-      state.newFriendGroup.friends = state.newFriendGroup.friends.filter((item) => item !== action.payload)
+      state.newFriendGroup.friends = state.newFriendGroup.friends.filter(
+        (item) => item !== action.payload
+      );
     },
     addGroupToFriendGroups: (state, action) => {
-      state.friendGroups.push(action.payload)
+      state.friendGroups.push(action.payload);
     },
     removeFriendfromGroupList: (state, action) => {
-      const groupIndex = state.friendGroups.findIndex((item) => item.name === action.payload.name);
-      console.log(groupIndex)
-      console.log("This is the friend to remove: ", action.payload.friendToRemove)
+      const groupIndex = state.friendGroups.findIndex(
+        (item) => item.name === action.payload.name
+      );
       if (groupIndex !== -1) {
-        const updatedGroup = state.friendGroups[groupIndex].friends.filter((item: string) => item !== action.payload.friendToRemove);
-        console.log(updatedGroup)
+        const updatedGroup = state.friendGroups[groupIndex].friends.filter(
+          (item: string) => item !== action.payload.friendToRemove
+        );
+        console.log(updatedGroup);
         state.friendGroups[groupIndex].friends = updatedGroup;
       }
+    },
+    removeGroupFromGroupList: (state, action) => {
+      state.friendGroups = state.friendGroups.filter(
+        (item: FriendGroup) => item.name !== action.payload
+      );
     },
     addFriendtoViewableFriends: (state, action) => {
       state.viewableFriends.push(action.payload);
@@ -257,7 +283,8 @@ export const {
   loadFriendGroups,
   addNewGroupFriend,
   removeNewGroupFriend,
-  removeFriendfromGroupList
+  removeFriendfromGroupList,
+  removeGroupFromGroupList,
 } = friendsSlice.actions;
 
 export default friendsSlice.reducer;

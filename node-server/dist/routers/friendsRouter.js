@@ -40,6 +40,9 @@ router.post("/add-friend-to-group", authController_1.default.checkCookie, (req, 
 router.delete("/remove-friend-from-group", authController_1.default.checkCookie, friendsController_1.default.removeFriendFromGroup, (req, res) => {
     return res.json("SUCCESS");
 });
+router.delete("/delete-friend-group", authController_1.default.checkCookie, friendsController_1.default.deleteFriendGroup, (req, res) => {
+    return res.json("SUCCESS");
+});
 router.get("/get-friend-groups", authController_1.default.checkCookie, friendsController_1.default.getFriendGroups, (req, res) => {
     return res.json(res.locals.friendGroups);
 });
