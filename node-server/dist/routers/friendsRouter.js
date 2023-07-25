@@ -12,6 +12,9 @@ const db = db_1.default;
 router.post("/search", authController_1.default.checkCookie, friendsController_1.default.search, (req, res) => {
     return res.json(res.locals.searchResults);
 });
+router.post("/search-all", authController_1.default.checkCookie, friendsController_1.default.searchAll, (req, res) => {
+    return res.json(res.locals.searchResultsAll);
+});
 router.post("/add-friend", authController_1.default.checkCookie, friendsController_1.default.addFriend, (req, res) => {
     return res.json("SUCCESS");
 });

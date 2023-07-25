@@ -8,7 +8,18 @@ export function FriendGroupBubble(props: {
 }) {
   const [expand, setExpand] = useState(false);
   const { title, children } = props;
-
+  const friendsList = children?.map((username) => {
+    return (
+      
+        <div className="friend-bubble">
+          <div className="title-and-button-container">
+            <p>{username}</p>
+            <button className="friend-button">remove</button>
+          </div>
+        </div>
+      
+    );
+  });
   return (
     <div className="friend-bubble">
       <div className="title-and-button-container">
@@ -41,12 +52,12 @@ export function FriendGroupBubble(props: {
           </span>
         </button>
         <div className="bubble-button-conatiner">
-              <button className="friend-button">Find-Dates</button>
+          <button className="friend-button">Find-Dates</button>
         </div>
       </div>
 
-      <div style={{ display: expand ? "block" : "none" }}>
-        {children}
+      <div style={{ display: expand ? "flex" : "none" }} className="expand-container">
+        {friendsList}
         <button className="friend-button">Add-Friend</button>
       </div>
     </div>

@@ -60,6 +60,38 @@ const friendsController = {
             next(errorObj);
         }
     }),
+    searchAll: (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+        const { searchTerm } = req.body;
+        const { username } = res.locals;
+        const query = `
+    WITH user_info AS (
+      SELECT id AS user_id
+      FROM users
+      WHERE username = $1
+    )
+    SELECT u.username
+    FROM users u
+    WHERE u.username ILIKE $2
+    AND u.id != (SELECT user_id FROM user_info)
+  `;
+        const values = [username, `%${searchTerm}%`];
+        try {
+            const result = yield db_1.default.query(query, values);
+            const usernameArray = result.rows.map((userObj) => userObj.username); // Access the 'username' property
+            res.locals.searchResultsAll = usernameArray; // Store the array of usernames in 'searchResults'
+            return next();
+        }
+        catch (err) {
+            const errorObj = {
+                log: `There was an error in the friendsController.search middleware: ${err}`,
+                status: 500,
+                message: {
+                    err: `There was a problem searching for friends`,
+                },
+            };
+            next(errorObj);
+        }
+    }),
     getFriends: (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
         const { username } = res.locals;
         const query = `
@@ -208,21 +240,21 @@ const friendsController = {
         const { username } = res.locals;
         const { name, friends } = req.body;
         const queryWithFriends = `
-      WITH user_info AS (
-        SELECT id AS owner_id
-        FROM users
-        WHERE username = $1
-      ),
-      new_group AS (
-        INSERT INTO friend_groups (group_name, owner_id)
-        SELECT $2, owner_id FROM user_info
-        RETURNING id
-      )
-      INSERT INTO group_members (group_id, user_id)
-      SELECT id, user_id
-      FROM new_group, users
-      WHERE users.username = ANY($3::text[])
-    `;
+    WITH user_info AS (
+      SELECT id AS owner_id
+      FROM users
+      WHERE username = $1
+    ),
+    new_group AS (
+      INSERT INTO friend_groups (group_name, owner_id)
+      SELECT $2, owner_id FROM user_info
+      RETURNING friend_groups.id -- Specify the table for "id" column
+    )
+    INSERT INTO group_members (group_id, user_id)
+    SELECT new_group.id, users.id 
+    FROM new_group, users
+    WHERE users.username = ANY($3::text[])
+  `;
         const noFriendsQuery = `
       WITH user_info AS (
         SELECT id AS owner_id
@@ -266,15 +298,24 @@ const friendsController = {
         FROM users
         WHERE username = $1
       )
-      SELECT *
-      FROM friend_groups 
-      WHERE owner_id = (SELECT owner_id FROM user_info);    
+      SELECT friend_groups.group_name, array_agg(users.username) AS friends
+      FROM friend_groups
+      LEFT JOIN group_members ON friend_groups.id = group_members.group_id
+      LEFT JOIN users ON group_members.user_id = users.id
+      WHERE friend_groups.owner_id = (SELECT owner_id FROM user_info)
+      GROUP BY friend_groups.group_name;
     `;
         const values = [username];
         try {
             const result = yield db_1.default.query(query, values);
-            const friendGroups = result.rows.map((row) => { return { name: row.group_name, "friends": [] }; });
-            res.locals.friendGroups = friendGroups;
+            console.log(result.rows);
+            const friendGroupsList = result.rows.map((row) => {
+                if (row.friends[0])
+                    return { name: row.group_name, friends: row.friends };
+                else
+                    return { name: row.group_name, friends: [] };
+            });
+            res.locals.friendGroups = friendGroupsList;
             return next();
         }
         catch (err) {

@@ -16,6 +16,24 @@ export async function friendSearch(searchTerm: string) {
 
   return responseParsed;
 }
+export async function friendSearchAll(searchTerm: string) {
+  const response = await fetch("/api/friends/search-all", {
+    method: "POST",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ searchTerm: searchTerm }),
+  });
+  const responseParsed = await response.json();
+
+  if (response.status >= 400) {
+    // Handle server errors here (e.g., throw an error)
+    throw new Error("Problems finding friends");
+  }
+
+  return responseParsed;
+}
 export async function addFriend(username: string) {
   const response = await fetch("/api/friends/add-friend", {
     method: "POST",
