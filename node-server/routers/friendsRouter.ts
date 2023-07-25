@@ -75,6 +75,9 @@ router.post("/add-friend-to-group", authController.checkCookie, (req, res) => {
 router.delete("/remove-friend-from-group", authController.checkCookie, friendsController.removeFriendFromGroup, (req, res) => {
   return res.json("SUCCESS")
 })
+router.delete("/delete-friend-group", authController.checkCookie, friendsController.deleteFriendGroup, (req, res) => {
+  return res.json("SUCCESS")
+})
 router.get(
   "/get-friend-groups",
   authController.checkCookie,

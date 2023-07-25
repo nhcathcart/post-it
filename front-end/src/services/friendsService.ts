@@ -129,18 +129,37 @@ export async function getFriendGroups() {
   return responseParsed;
 }
 
-export async function removeFriendFromGroup(groupObj: { name: string, friendToRemove: string}){
+export async function removeFriendFromGroup(groupObj: {
+  name: string;
+  friendToRemove: string;
+}) {
   const response = await fetch("/api/friends/remove-friend-from-group", {
     method: "DELETE",
     credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(groupObj)
-  })
+    body: JSON.stringify(groupObj),
+  });
   const responseParsed = await response.json();
   if (response.status >= 400) {
     throw new Error("Problems getting friend groups");
   }
   return responseParsed;
+}
+
+export async function deleteFriendGroup(groupName: string) {
+  const response = await fetch("/api/friends/delete-friend-group", {
+    method: "DELETE",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ groupName: groupName }),
+  });
+  const responseParsed = await response.json();
+  if (response.status >= 400) {
+    throw new Error("Problems deleteing friend group");
+  }
+  return responseParsed
 }
