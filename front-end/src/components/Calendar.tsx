@@ -4,8 +4,11 @@ import { useEffect, useMemo } from "react";
 import { ModalButton } from "./ModalButton";
 import AddEventForm from "./AddEventForm";
 import { useAppDispatch, useAppSelector } from "../hooks";
-import { getEventsThunk } from "../reducers/eventsReducer";
-
+import {
+  getEventsThunk,
+  getFriendGroupEventsThunk,
+} from "../reducers/eventsReducer";
+import { getFriendGroupsThunk } from "../reducers/friendsReducer";
 
 //helper function to format event objects
 
@@ -25,13 +28,14 @@ function formatEvents(events: any) {
 const localizer = momentLocalizer(moment);
 
 export function MyCalendar() {
-
   const dispatch = useAppDispatch();
   const state = useAppSelector((state) => state.events.events);
+  const friendsState = useAppSelector((state) => state.friends);
   const events = formatEvents(state);
 
   useEffect(() => {
     dispatch(getEventsThunk());
+    dispatch(getFriendGroupsThunk());
   }, []);
 
   const { components, defaultDate } = useMemo(
@@ -95,10 +99,25 @@ export function MyCalendar() {
     );
   }
 
-  
-
   return (
     <>
+      <div className="calendar-controls-container">
+        <select
+          onChange={(e) => {
+            dispatch(getFriendGroupEventsThunk(e.target.value));
+          }}
+          className="calendar-select"
+        >
+          <option value={"Just me"}>Just me</option>
+          {friendsState.friendGroups.map((friendGroup) => {
+            return (
+              <option value={friendGroup.name} key={friendGroup.name}>
+                {friendGroup.name}
+              </option>
+            );
+          })}
+        </select>
+      </div>
       <Calendar
         localizer={localizer}
         style={{ height: "90%", width: "87%" }}

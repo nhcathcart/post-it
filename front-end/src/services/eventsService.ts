@@ -9,6 +9,21 @@ export async function getEvents() {
   return responseParsed;
 }
 
+export async function getFriendGroupEvents(friendGroup: string) {
+  const response = await fetch("/api/events/get-friend-group-events", {
+    method: "POST",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({friendGroup: friendGroup}),
+  });
+  const responseParsed = await response.json();
+  if (response.status >= 400) {
+    throw new Error("Problems deleteing friend group");
+  }
+  return responseParsed;
+}
 export async function postEvent(event: Event) {
   const response = await fetch("/api/events/post-event", {
     method: "POST",
@@ -21,6 +36,3 @@ export async function postEvent(event: Event) {
   const responseParsed = response.json();
   return responseParsed;
 }
-
-
-

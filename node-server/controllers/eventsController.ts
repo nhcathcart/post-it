@@ -72,6 +72,64 @@ const eventsController = {
       next(errorObj);
     }
   },
+  getFriendGroupEvents: async (req: Request, res: Response, next: NextFunction) => {
+
+    const { username } = res.locals;
+    const { friendGroup } = req.body;
+    
+    const query = `
+      WITH user_info AS (
+        SELECT id
+        FROM users
+        WHERE username = $1
+      ), group_users AS (
+        SELECT DISTINCT group_members.user_id
+        FROM group_members
+        JOIN friend_groups ON group_members.group_id = friend_groups.id
+        WHERE friend_groups.group_name = $2 AND friend_groups.owner_id = (SELECT id FROM user_info)
+      )
+      SELECT
+        users.username,
+        events.title,
+        events.start_date AS start,
+        events.end_date AS end,
+        events.all_day,
+        events.resource
+      FROM events
+      JOIN users ON events.user_id = users.id
+      WHERE events.user_id = (SELECT id FROM user_info)
+      UNION
+      SELECT
+        users.username,
+        events.title,
+        events.start_date AS start,
+        events.end_date AS end,
+        events.all_day,
+        events.resource
+      FROM events
+      JOIN users ON events.user_id = users.id
+      WHERE events.user_id IN (SELECT user_id FROM group_users);
+    `;
+  
+    const values = [username, friendGroup];
+  
+    try {
+      const result = await db.query(query, values);
+      res.locals.friendGroupEvents = result.rows;
+      console.log(result.rows)
+      return next();
+    } catch (err) {
+      const errorObj = {
+        log: `There was an error in the getEventsByUsername middleware: ${err}`,
+        status: 500,
+        message: {
+          err: `There was a problem retrieving events`,
+        },
+      };
+      next(errorObj);
+    }
+  },
+  
 };
 
 export default eventsController;

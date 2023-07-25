@@ -1,12 +1,21 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { Event } from "react-big-calendar";
-import { getEvents, postEvent } from "../services/eventsService";
+import { getEvents, postEvent, getFriendGroupEvents } from "../services/eventsService";
 import { ReactNode } from "react";
 
 export interface EventAdapter {
   title: React.ReactNode,
   start: string | Date,
   end: string | Date,
+  allDay?: boolean
+  resource?: any,
+}
+
+export interface CustomEvent {
+  title: React.ReactNode,
+  owner: string,
+  start: string,
+  end: string,
   allDay?: boolean
   resource?: any,
 }
@@ -23,7 +32,7 @@ const initialState: EventsStateType = {
 };
 
 interface EventsStateType {
-  events: Event[];
+  events: CustomEvent[];
   newEvent: Event;
 }
 
@@ -42,6 +51,17 @@ export const getEventsThunk = createAsyncThunk(
   }
 );
 
+export const getFriendGroupEventsThunk = createAsyncThunk(
+  "/api/events/get-friend-group-events",
+  async (friendGroup: string, thunkAPI) => {
+    try{
+      const response = await getFriendGroupEvents(friendGroup);
+      thunkAPI.dispatch(loadEvents(response));
+    }catch(error) {
+      return thunkAPI.rejectWithValue(error)
+    }
+  }
+)
 export const postEventThunk = createAsyncThunk(
   "/api/events/post-event",
   async (event: Event, thunkAPI) => {
