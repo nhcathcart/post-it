@@ -8,7 +8,8 @@ import {
   loadPendingFriends,
   acceptFriend,
   addFriendGroup,
-  getFriendGroups
+  getFriendGroups,
+  removeFriendFromGroup
 } from "../services/friendsService";
 import FriendGroup from "../components/FriendGroups";
 
@@ -138,6 +139,17 @@ export const addFriendGroupThunk = createAsyncThunk(
     }
   }
 );
+export const removeFriendFromGroupThunk = createAsyncThunk(
+  "/api/friends/remove-friend-from-group",
+  async (groupObj: { name: string, friendToRemove: string}, thunkAPI) => {
+    try {
+      const response = await removeFriendFromGroup(groupObj);
+      thunkAPI.dispatch(removeFriendfromGroupList({name: groupObj.name, friendToRemove: groupObj.friendToRemove}))
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error)
+    }
+  }
+)
 export const getFriendGroupsThunk = createAsyncThunk(
   "/api/friends/get-friend-groups",
   async (_, thunkAPI) => {
@@ -188,6 +200,16 @@ export const friendsSlice = createSlice({
     addGroupToFriendGroups: (state, action) => {
       state.friendGroups.push(action.payload)
     },
+    removeFriendfromGroupList: (state, action) => {
+      const groupIndex = state.friendGroups.findIndex((item) => item.name === action.payload.name);
+      console.log(groupIndex)
+      console.log("This is the friend to remove: ", action.payload.friendToRemove)
+      if (groupIndex !== -1) {
+        const updatedGroup = state.friendGroups[groupIndex].friends.filter((item: string) => item !== action.payload.friendToRemove);
+        console.log(updatedGroup)
+        state.friendGroups[groupIndex].friends = updatedGroup;
+      }
+    },
     addFriendtoViewableFriends: (state, action) => {
       state.viewableFriends.push(action.payload);
     },
@@ -234,7 +256,8 @@ export const {
   updateNewGroupName,
   loadFriendGroups,
   addNewGroupFriend,
-  removeNewGroupFriend
+  removeNewGroupFriend,
+  removeFriendfromGroupList
 } = friendsSlice.actions;
 
 export default friendsSlice.reducer;

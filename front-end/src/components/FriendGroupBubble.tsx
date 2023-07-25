@@ -1,23 +1,37 @@
 import { ReactNode, useState } from "react";
 import "../css/FriendsPage.css";
 import "../css/utility-css.css";
+import { useAppDispatch } from "../hooks";
+import { removeFriendFromGroupThunk } from "../reducers/friendsReducer";
+
 export function FriendGroupBubble(props: {
   title: string;
-  children?: ReactNode[];
+  children?: string[];
   buttons?: ReactNode[];
 }) {
   const [expand, setExpand] = useState(false);
   const { title, children } = props;
+  const dispatch = useAppDispatch();
   const friendsList = children?.map((username) => {
     return (
-      
-        <div className="friend-bubble">
-          <div className="title-and-button-container">
-            <p>{username}</p>
-            <button className="friend-button">remove</button>
-          </div>
+      <div className="friend-bubble">
+        <div className="title-and-button-container">
+          <p>{username}</p>
+          <button
+            className="friend-button"
+            onClick={() => {
+              dispatch(
+                removeFriendFromGroupThunk({
+                  name: title,
+                  friendToRemove: username,
+                })
+              );
+            }}
+          >
+            remove
+          </button>
         </div>
-      
+      </div>
     );
   });
   return (
@@ -56,7 +70,10 @@ export function FriendGroupBubble(props: {
         </div>
       </div>
 
-      <div style={{ display: expand ? "flex" : "none" }} className="expand-container">
+      <div
+        style={{ display: expand ? "flex" : "none" }}
+        className="expand-container"
+      >
         {friendsList}
         <button className="friend-button">Add-Friend</button>
       </div>
