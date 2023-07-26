@@ -181,6 +181,7 @@ export const getFriendGroupsThunk = createAsyncThunk(
     }
   }
 );
+
 export const deleteFriendGroupThunk = createAsyncThunk(
   "/api/friends/delete-friend-group",
   async (groupName: string, thunkAPI) => {
