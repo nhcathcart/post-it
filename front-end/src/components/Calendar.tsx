@@ -7,9 +7,12 @@ import { useAppDispatch, useAppSelector } from "../hooks";
 import {
   getEventsThunk,
   getFriendGroupEventsThunk,
-  CustomEvent
+  CustomEvent,
 } from "../reducers/eventsReducer";
-import { getFriendGroupsThunk, loadFriendsThunk } from "../reducers/friendsReducer";
+import {
+  getFriendGroupsThunk,
+  loadFriendsThunk,
+} from "../reducers/friendsReducer";
 
 const localizer = momentLocalizer(moment);
 
@@ -17,11 +20,11 @@ export function MyCalendar() {
   const dispatch = useAppDispatch();
   const state = useAppSelector((state) => state.events.events);
   const friendsState = useAppSelector((state) => state.friends);
-  const colorPointer = makeColorPointer(friendsState.friends)
+  const colorPointer = makeColorPointer(friendsState.friends);
   useEffect(() => {
     dispatch(getEventsThunk());
     dispatch(getFriendGroupsThunk());
-    dispatch(loadFriendsThunk())
+    dispatch(loadFriendsThunk());
   }, []);
 
   const { components } = useMemo(
@@ -45,29 +48,34 @@ export function MyCalendar() {
   function customEvent(event: any) {
     return <div>{event.title}</div>;
   }
-  const colorChoiceObj = {}
+  const colorChoiceObj = {};
   //function to return styling for events in the calendar component
 
-  function makeColorPointer (friends: string[]) {
+  function makeColorPointer(friends: string[]) {
     const colorPointer: any = {};
-    const colorArray = ["#63474d", "#8B0000", "#eb9486", ]
+    const colorArray = ["#63474d", "#8B0000", "#eb9486"];
     let counter = 0;
-    for (let i=0; i<friends.length; i++){
+    for (let i = 0; i < friends.length; i++) {
       if (counter >= friends.length) counter = 0;
-      colorPointer[friends[i]] = colorArray[counter]
+      colorPointer[friends[i]] = colorArray[counter];
       counter += 1;
     }
-    
+
     return colorPointer;
   }
-  function customEventPropGetter(event: CustomEvent, start: any, end: any, isSelected: any) {
+  function customEventPropGetter(
+    event: CustomEvent,
+    start: any,
+    end: any,
+    isSelected: any
+  ) {
     let newStyle = {
       backgroundColor: "#5a7d7c",
     };
-    if (event.username in colorPointer){
-      newStyle.backgroundColor = colorPointer[event.username]
+    if (event.username in colorPointer) {
+      newStyle.backgroundColor = colorPointer[event.username];
     }
-    
+
     return {
       style: newStyle,
     };
@@ -134,6 +142,7 @@ export function MyCalendar() {
           className="calendar-select"
         >
           <option value={"Just me"}>Just me</option>
+          {/* creating all of the options from the state */}
           {friendsState.friendGroups.map((friendGroup) => {
             return (
               <option value={friendGroup.name} key={friendGroup.name}>
