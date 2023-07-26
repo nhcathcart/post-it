@@ -13,7 +13,7 @@ export interface EventAdapter {
 
 export interface CustomEvent {
   title: React.ReactNode,
-  owner: string,
+  username: string,
   start: string,
   end: string,
   allDay?: boolean

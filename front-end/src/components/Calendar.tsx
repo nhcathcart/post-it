@@ -1,4 +1,4 @@
-import { Calendar, momentLocalizer, Event } from "react-big-calendar";
+import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import { useEffect, useMemo } from "react";
 import { ModalButton } from "./ModalButton";
@@ -7,47 +7,72 @@ import { useAppDispatch, useAppSelector } from "../hooks";
 import {
   getEventsThunk,
   getFriendGroupEventsThunk,
+  CustomEvent
 } from "../reducers/eventsReducer";
-import { getFriendGroupsThunk } from "../reducers/friendsReducer";
+import { getFriendGroupsThunk, loadFriendsThunk } from "../reducers/friendsReducer";
 
-//helper function to format event objects
-
-function formatEvents(events: any) {
-  const formattedEvents = events.map((event: any) => {
-    //This formats the date strings into date objects
-    return {
-      title: event.title,
-      start: new Date(event.start),
-      end: new Date(event.end),
-      allDay: event.allDay,
-      resource: event.resource,
-    };
-  });
-  return formattedEvents;
-}
 const localizer = momentLocalizer(moment);
 
 export function MyCalendar() {
   const dispatch = useAppDispatch();
   const state = useAppSelector((state) => state.events.events);
   const friendsState = useAppSelector((state) => state.friends);
-  const events = formatEvents(state);
-
+  const colorPointer = makeColorPointer(friendsState.friends)
   useEffect(() => {
     dispatch(getEventsThunk());
     dispatch(getFriendGroupsThunk());
+    dispatch(loadFriendsThunk())
   }, []);
 
-  const { components, defaultDate } = useMemo(
+  const { components } = useMemo(
     () => ({
       components: {
         toolbar: customToolbar,
+        event: customEvent,
       },
-      defaultDate: new Date(2015, 3, 13),
     }),
     []
   );
+  // export interface CustomEvent {
+  //   title: React.ReactNode,
+  //   owner: string,
+  //   start: string,
+  //   end: string,
+  //   allDay?: boolean
+  //   resource?: any,
+  // }
+  //function to return event in the calendar component
+  function customEvent(event: any) {
+    return <div>{event.title}</div>;
+  }
+  const colorChoiceObj = {}
+  //function to return styling for events in the calendar component
 
+  function makeColorPointer (friends: string[]) {
+    const colorPointer: any = {};
+    const colorArray = ["#63474d", "#8B0000", "#eb9486", ]
+    let counter = 0;
+    for (let i=0; i<friends.length; i++){
+      if (counter >= friends.length) counter = 0;
+      colorPointer[friends[i]] = colorArray[counter]
+      counter += 1;
+    }
+    
+    return colorPointer;
+  }
+  function customEventPropGetter(event: CustomEvent, start: any, end: any, isSelected: any) {
+    let newStyle = {
+      backgroundColor: "#5a7d7c",
+    };
+    if (event.username in colorPointer){
+      newStyle.backgroundColor = colorPointer[event.username]
+    }
+    
+    return {
+      style: newStyle,
+    };
+  }
+  //function to return the toolbar in the calendar component
   function customToolbar(toolbar: any) {
     return (
       <div
@@ -121,11 +146,9 @@ export function MyCalendar() {
       <Calendar
         localizer={localizer}
         style={{ height: "90%", width: "87%" }}
-        events={events}
-        components={{
-          // Use the `toolbar` prop to render your custom button component
-          toolbar: customToolbar,
-        }}
+        events={state}
+        components={components}
+        eventPropGetter={customEventPropGetter}
       />
     </>
   );
