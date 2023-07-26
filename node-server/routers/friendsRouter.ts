@@ -41,8 +41,15 @@ router.get(
   authController.checkCookie,
   friendsController.getPendingFriends,
   (req, res) => {
-    console.log(res.locals.pendingFriends);
     return res.json(res.locals.pendingFriends);
+  }
+);
+router.get(
+  "/get-sent-friend-requests",
+  authController.checkCookie,
+  friendsController.getSentFriendRequests,
+  (req, res) => {
+    return res.json(res.locals.sentFriendRequests);
   }
 );
 router.post(
@@ -72,12 +79,22 @@ router.post(
 router.post("/add-friend-to-group", authController.checkCookie, (req, res) => {
   return res.json("SUCCESS");
 });
-router.delete("/remove-friend-from-group", authController.checkCookie, friendsController.removeFriendFromGroup, (req, res) => {
-  return res.json("SUCCESS")
-})
-router.delete("/delete-friend-group", authController.checkCookie, friendsController.deleteFriendGroup, (req, res) => {
-  return res.json("SUCCESS")
-})
+router.delete(
+  "/remove-friend-from-group",
+  authController.checkCookie,
+  friendsController.removeFriendFromGroup,
+  (req, res) => {
+    return res.json("SUCCESS");
+  }
+);
+router.delete(
+  "/delete-friend-group",
+  authController.checkCookie,
+  friendsController.deleteFriendGroup,
+  (req, res) => {
+    return res.json("SUCCESS");
+  }
+);
 router.get(
   "/get-friend-groups",
   authController.checkCookie,

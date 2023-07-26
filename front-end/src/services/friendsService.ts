@@ -93,7 +93,21 @@ export async function loadPendingFriends() {
 
   return responseParsed;
 }
-
+export async function loadSentFriendRequests(){
+  const response = await fetch("/api/friends/get-sent-friend-requests", {
+    method: "GET",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+  const responseParsed = await response.json();
+  console.log(responseParsed)
+  if (response.status >= 400){
+    throw new Error("Problems loading sent requests")
+  }
+  return responseParsed;
+}
 export async function addFriendGroup(groupObj: {
   name: string;
   friends: string[];

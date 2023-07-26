@@ -153,6 +153,39 @@ const friendsController = {
       next(errorObj);
     }
   },
+  getSentFriendRequests: async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    const { username } = res.locals;
+    const query = `
+    SELECT users.username
+    FROM users
+    JOIN friend_requests ON users.id = friend_requests.receiver_id
+    JOIN users AS sender ON friend_requests.sender_id = sender.id
+    WHERE sender.username = $1;
+    `;
+
+    const values = [username];
+
+    try {
+      const result = await db.query(query, values);
+      console.log(result.rows)
+      const sentFriendRequests = result.rows.map((row) => row.username);
+      res.locals.sentFriendRequests = sentFriendRequests;
+      return next();
+    } catch (err) {
+      const errorObj = {
+        log: `There was an error in the getPendingFriendRequests middleware: ${err}`,
+        status: 500,
+        message: {
+          err: `There was a problem getting pending friend requests.`,
+        },
+      };
+      next(errorObj);
+    }
+  },
 
   addFriend: async (req: Request, res: Response, next: NextFunction) => {
     const { username } = res.locals;
@@ -397,10 +430,10 @@ const friendsController = {
     DELETE FROM group_members
     WHERE group_id = (SELECT id FROM friend_groups WHERE group_name = $2 AND owner_id = (SELECT id FROM users WHERE username = $1));
   `;
-   const query2 = `
+    const query2 = `
    DELETE FROM friend_groups
     WHERE group_name = $2 AND owner_id = (SELECT id FROM users WHERE username = $1);
-   `
+   `;
     const values = [username, groupName];
 
     try {

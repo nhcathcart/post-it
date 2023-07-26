@@ -22,8 +22,10 @@ router.get("/get-friends", authController_1.default.checkCookie, friendsControll
     return res.json(res.locals.friends);
 });
 router.get("/get-pending-friends", authController_1.default.checkCookie, friendsController_1.default.getPendingFriends, (req, res) => {
-    console.log(res.locals.pendingFriends);
     return res.json(res.locals.pendingFriends);
+});
+router.get("/get-sent-friend-requests", authController_1.default.checkCookie, friendsController_1.default.getSentFriendRequests, (req, res) => {
+    return res.json(res.locals.sentFriendRequests);
 });
 router.post("/accept-friend-request", authController_1.default.checkCookie, friendsController_1.default.acceptFriendRequest, (req, res) => {
     return res.json("SUCCESS");

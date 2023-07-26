@@ -11,6 +11,7 @@ import {
   getFriendGroups,
   removeFriendFromGroup,
   deleteFriendGroup,
+  loadSentFriendRequests,
 } from "../services/friendsService";
 import FriendGroup from "../components/FriendGroups";
 
@@ -19,6 +20,7 @@ interface FriendState {
   findFriendsList: string[];
   friends: string[];
   pendingFriends: string[];
+  sentFriendRequests: string[];
   viewableFriends: string[];
   newFriendGroup: FriendGroup;
   friendGroups: FriendGroup[];
@@ -41,6 +43,7 @@ const initialState: FriendState = {
   findFriendsList: [],
   friends: [],
   pendingFriends: [],
+  sentFriendRequests: [],
   viewableFriends: [],
   newFriendGroup: { name: "", friends: [] },
   friendGroups: [],
@@ -129,6 +132,17 @@ export const loadPendingFriendsThunk = createAsyncThunk(
     }
   }
 );
+export const loadSentFriendRequestsThunk = createAsyncThunk(
+  "/api/friends/get-sent-friend-requests",
+  async(_, thunkAPI) => {
+    try{
+      const response = await loadSentFriendRequests();
+      thunkAPI.dispatch(loadSentFriendRequestsList(response))
+    }catch (error) {
+      return thunkAPI.rejectWithValue(error)
+    }
+  }
+)
 export const addFriendGroupThunk = createAsyncThunk(
   "/api/friends/add-friend-group",
   async (groupObj: { name: string; friends: string[] }, thunkAPI) => {
@@ -248,6 +262,12 @@ export const friendsSlice = createSlice({
     loadPendingFriendsList: (state, action) => {
       state.pendingFriends = action.payload;
     },
+    loadSentFriendRequestsList: (state, action) => {
+      state.sentFriendRequests = action.payload
+    },
+    pushtoSentFriendRequests: (state, action) => {
+      state.sentFriendRequests.push(action.payload)
+    },
     toggleFriendsList(state) {
       state.friendsView.friendsList = true;
       state.friendsView.friendGroups = false;
@@ -285,6 +305,8 @@ export const {
   removeNewGroupFriend,
   removeFriendfromGroupList,
   removeGroupFromGroupList,
+  loadSentFriendRequestsList,
+  pushtoSentFriendRequests,
 } = friendsSlice.actions;
 
 export default friendsSlice.reducer;

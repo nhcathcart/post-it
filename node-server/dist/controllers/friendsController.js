@@ -145,6 +145,34 @@ const friendsController = {
             next(errorObj);
         }
     }),
+    getSentFriendRequests: (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+        const { username } = res.locals;
+        const query = `
+    SELECT users.username
+    FROM users
+    JOIN friend_requests ON users.id = friend_requests.receiver_id
+    JOIN users AS sender ON friend_requests.sender_id = sender.id
+    WHERE sender.username = $1;
+    `;
+        const values = [username];
+        try {
+            const result = yield db_1.default.query(query, values);
+            console.log(result.rows);
+            const sentFriendRequests = result.rows.map((row) => row.username);
+            res.locals.sentFriendRequests = sentFriendRequests;
+            return next();
+        }
+        catch (err) {
+            const errorObj = {
+                log: `There was an error in the getPendingFriendRequests middleware: ${err}`,
+                status: 500,
+                message: {
+                    err: `There was a problem getting pending friend requests.`,
+                },
+            };
+            next(errorObj);
+        }
+    }),
     addFriend: (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
         const { username } = res.locals;
         const { friend } = req.body;
