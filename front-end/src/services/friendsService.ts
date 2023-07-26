@@ -102,7 +102,6 @@ export async function loadSentFriendRequests(){
     },
   })
   const responseParsed = await response.json();
-  console.log(responseParsed)
   if (response.status >= 400){
     throw new Error("Problems loading sent requests")
   }

@@ -19,4 +19,7 @@ router.get("/get-events", authController_1.default.checkCookie, eventsController
 router.post("/get-friend-group-events", authController_1.default.checkCookie, eventsController_1.default.getFriendGroupEvents, (req, res) => {
     res.json(res.locals.friendGroupEvents);
 });
+router.post("/get-friend-events", authController_1.default.checkCookie, eventsController_1.default.getFriendEvents, (req, res) => {
+    res.json(res.locals.friendEvents);
+});
 exports.default = router;

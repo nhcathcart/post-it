@@ -121,7 +121,58 @@ const eventsController = {
         try {
             const result = yield db_1.default.query(query, values);
             res.locals.friendGroupEvents = result.rows;
-            console.log(result.rows);
+            return next();
+        }
+        catch (err) {
+            const errorObj = {
+                log: `There was an error in the getEventsByUsername middleware: ${err}`,
+                status: 500,
+                message: {
+                    err: `There was a problem retrieving events`,
+                },
+            };
+            next(errorObj);
+        }
+    }),
+    getFriendEvents: (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+        const { username } = res.locals;
+        const { friend } = req.body;
+        const query = `
+    WITH user_info AS (
+      SELECT id
+      FROM users
+      WHERE username = $1
+    ), friend_info AS (
+      SELECT id
+      FROM users
+      WHERE username = $2
+    ), user_and_friend_events AS (
+      SELECT
+        user_id,
+        title,
+        start_date AS start,
+        end_date AS end,
+        all_day,
+        resource
+      FROM events
+      WHERE events.user_id = (SELECT id FROM user_info)
+         OR events.user_id = (SELECT id FROM friend_info)
+    )
+    SELECT
+      users.username,
+      events.title,
+      events.start,
+      events.end,
+      events.all_day,
+      events.resource
+    FROM user_and_friend_events AS events
+    JOIN users ON events.user_id = users.id;
+    
+    `;
+        const values = [username, friend];
+        try {
+            const result = yield db_1.default.query(query, values);
+            res.locals.friendEvents = result.rows;
             return next();
         }
         catch (err) {
