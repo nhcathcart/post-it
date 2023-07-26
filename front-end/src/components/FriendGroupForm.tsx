@@ -6,7 +6,8 @@ import {
   addFriendGroupThunk,
   addNewGroupFriend,
   friendSearchAllThunk,
-  removeNewGroupFriend
+  removeNewGroupFriend,
+  filterViewableFriends
 } from "../reducers/friendsReducer";
 import { v4 as uuid } from "uuid";
 
@@ -40,7 +41,7 @@ export default function FriendGroupForm() {
     }
   );
 
-  const searchList = state.findFriendsList.map((username: string) => {
+  const searchList = state.viewableFriends.map((username: string) => {
     return (
       <div className="friend-bubble" key={uuid()}>
         <div className="title-and-button-container">
@@ -74,13 +75,13 @@ export default function FriendGroupForm() {
       <div className="staged-friend-container">{newGroupFriends}</div>
       <div className="friends-content-container">
         <div className="friends-list-container">
-          <h3>Find Friends</h3>
+          <h3>Friends</h3>
           <input
             type="text"
             placeholder="search"
             className="friend-search-input"
             onChange={(e) => {
-              dispatch(friendSearchAllThunk(e.target.value));
+              dispatch(filterViewableFriends(e.target.value));
             }}
           />
           {searchList}
