@@ -29,19 +29,17 @@ export default function FindFriends() {
       </div>
     );
   });
-  const pendingFrinedsList = state.pendingFriends.map((username: string) => {
+  const sentFriendRequests = state.sentFriendRequests.map((friend) => {
     return (
       <div className="friend-bubble" key={uuid()}>
-        <p>{username}</p>
-        <button className="friend-button" onClick={() => {}}>
-          Accept
-        </button>
+        <p>{friend}</p>
       </div>
     );
   });
   useEffect(() => {
     dispatch(loadPendingFriendsThunk())
   }, []);
+
   return (
     <div className="friends-content-container">
       <div className="friends-list-container">
@@ -55,6 +53,8 @@ export default function FindFriends() {
           }}
         />
         {searchList}
+        <h4>Sent Friend Requests</h4>
+        {sentFriendRequests}
       </div>
       
     </div>
