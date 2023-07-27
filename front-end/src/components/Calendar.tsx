@@ -9,6 +9,7 @@ import {
   getFriendGroupEventsThunk,
   getFriendEventsThunk,
   CustomEvent,
+  dateFormatter,
 } from "../reducers/eventsReducer";
 import {
   getFriendGroupsThunk,
@@ -22,7 +23,8 @@ export function MyCalendar() {
   const state = useAppSelector((state) => state.events.events);
   const friendsState = useAppSelector((state) => state.friends);
   const colorPointer = makeColorPointer(friendsState.friends);
-
+  console.log(state)
+  console.log("formated: ", dateFormatter(state))
   const friendGroupSet = makeFriendGroupSet();
   useEffect(() => {
     dispatch(getEventsThunk());
@@ -193,7 +195,7 @@ export function MyCalendar() {
       <Calendar
         localizer={localizer}
         style={{ height: "90%", width: "87%" }}
-        events={state}
+        events={dateFormatter(state)}
         components={components}
         eventPropGetter={customEventPropGetter}
       />
