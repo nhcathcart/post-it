@@ -29,46 +29,57 @@ function getNextDayOfTheWeek(
 }
 
 export function createAvailObj(events: CustomEvent[]) {
-
   const dayArray = ["fri", "sat", "sun"];
-  const compareSet: any = new Set([])
+  const compareSet: any = new Set();
   const refObj: any = {};
 
   for (let i = 1; i < 4; i++) {
     for (let j = 0; j < dayArray.length; j++) {
-      compareSet.add(dayArray[j] + i)
-      if (dayArray[j] === "fri"){
-        refObj[dayArray[j] + i] = {
-            start: getNextDayOfTheWeek(dayArray[j], i)?.setHours(19, 0, 0, 0),
-            end: getNextDayOfTheWeek(dayArray[j], i)?.setHours(23, 59, 0, 0),
-          };
-      }else{
-        refObj[dayArray[j] + i] = {
-            start: getNextDayOfTheWeek(dayArray[j], i)?.setHours(0, 0, 0, 0),
-            end: getNextDayOfTheWeek(dayArray[j], i)?.setHours(23, 59, 0, 0),
-          };
+      const dayKey = dayArray[j] + i;
+      compareSet.add(dayKey);
+
+      const startHour = dayArray[j] === "fri" ? 19 : 0;
+      const endHour = 23;
+
+      const start = getNextDayOfTheWeek(dayArray[j], i)?.setHours(
+        startHour,
+        0,
+        0,
+        0
+      );
+      const end = getNextDayOfTheWeek(dayArray[j], i)?.setHours(
+        endHour,
+        59,
+        0,
+        0
+      );
+
+      refObj[dayKey] = { start, end };
+    }
+  }
+
+  for (let i = 0; i < events.length; i++) {
+    for (const key in refObj) {
+      const { start, end } = refObj[key];
+      if (events[i].end < start || events[i].start > end) {
+        continue;
+      } else {
+        compareSet.delete(key);
       }
-      
     }
   }
   
-  for (let i=0; i<events.length; i++){
-    for (const key in refObj){
-        if (events[i].start > refObj[key].end || events[i].end < refObj.start) continue;
-        else compareSet.delete(key)
-    }
-  }
+
   const output: any = {
-    fri : 0,
-    sat : 0,
-    sun : 0,
-  }
-  for (const key in compareSet){
-    if (key.startsWith('fri')) output['fri'] += 1;
-    if (key.startsWith('sat')) output['sat'] += 1;
-    if (key.startsWith('sun')) output['sun'] += 1;
-  }
+    fri: 0,
+    sat: 0,
+    sun: 0,
+  };
+
+  compareSet.forEach((key: string) => {
+    if (key.startsWith("fri")) output["fri"] += 1;
+    if (key.startsWith("sat")) output["sat"] += 1;
+    if (key.startsWith("sun")) output["sun"] += 1;
+  });
   return output;
 }
-
-
