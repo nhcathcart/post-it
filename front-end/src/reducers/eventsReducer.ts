@@ -36,12 +36,15 @@ interface EventsStateType {
   newEvent: Event;
 }
 //helper function to format date strings into date objects in event objects
-function dateFormatter (events: CustomEvent[]){
+export function dateFormatter (events: CustomEvent[]){
+  const newEventArray: CustomEvent[] = []
   events.forEach((event) => {
-    event.start = new Date(event.start)
-    event.end = new Date(event.end)
+    const newEvent = Object.assign({}, event)
+    newEvent.start = new Date(event.start)
+    newEvent.end = new Date(event.end)
+    newEventArray.push(newEvent)
   })
-  return events;
+  return newEventArray;
 }
 
 //Thunks, these use functions imported from the eventsService
@@ -51,8 +54,8 @@ export const getEventsThunk = createAsyncThunk(
     try {
       const response = await getEvents();
       if (response === "There was a problem") throw "Problems getting events";
-      const formattedResponse = dateFormatter(response)
-      thunkAPI.dispatch(loadEvents(formattedResponse));
+      // const formattedResponse = dateFormatter(response)
+      thunkAPI.dispatch(loadEvents(response));
       return response;
     } catch(error) {
        return thunkAPI.rejectWithValue(error);
@@ -65,8 +68,8 @@ export const getFriendGroupEventsThunk = createAsyncThunk(
   async (friendGroup: string, thunkAPI) => {
     try{
       const response = await getFriendGroupEvents(friendGroup);
-      const formattedResponse = dateFormatter(response)
-      thunkAPI.dispatch(loadEvents(formattedResponse));
+      // const formattedResponse = dateFormatter(response)
+      thunkAPI.dispatch(loadEvents(response));
     }catch(error) {
       return thunkAPI.rejectWithValue(error)
     }
@@ -77,8 +80,8 @@ export const getFriendEventsThunk = createAsyncThunk(
   async (friend: string, thunkAPI) => {
     try{
       const response = await getFriendEvents(friend);
-      const formattedResponse = dateFormatter(response)
-      thunkAPI.dispatch(loadEvents(formattedResponse));
+      // const formattedResponse = dateFormatter(response)
+      thunkAPI.dispatch(loadEvents(response));
     }catch(error) {
       return thunkAPI.rejectWithValue(error)
     }

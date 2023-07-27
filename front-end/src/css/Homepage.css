@@ -1,0 +1,18 @@
+.homepage-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 80%;
+  height: 40%;
+  border: none;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  border-radius: 20px;
+  padding: 5%;
+  box-sizing: border-box;
+  font-family: inherit;
+  color: black;
+}
+.big-number{
+    font-size: 30px;
+    color: #eb9486
+}
