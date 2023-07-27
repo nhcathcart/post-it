@@ -14,8 +14,8 @@ export interface EventAdapter {
 export interface CustomEvent {
   title: React.ReactNode,
   username: string,
-  start: string,
-  end: string,
+  start: string | Date,
+  end: string | Date,
   allDay?: boolean
   resource?: any,
 }
@@ -35,6 +35,14 @@ interface EventsStateType {
   events: CustomEvent[];
   newEvent: Event;
 }
+//helper function to format date strings into date objects in event objects
+function dateFormatter (events: CustomEvent[]){
+  events.forEach((event) => {
+    event.start = new Date(event.start)
+    event.end = new Date(event.end)
+  })
+  return events;
+}
 
 //Thunks, these use functions imported from the eventsService
 export const getEventsThunk = createAsyncThunk(
@@ -43,7 +51,8 @@ export const getEventsThunk = createAsyncThunk(
     try {
       const response = await getEvents();
       if (response === "There was a problem") throw "Problems getting events";
-      thunkAPI.dispatch(loadEvents(response));
+      const formattedResponse = dateFormatter(response)
+      thunkAPI.dispatch(loadEvents(formattedResponse));
       return response;
     } catch(error) {
        return thunkAPI.rejectWithValue(error);
@@ -56,7 +65,8 @@ export const getFriendGroupEventsThunk = createAsyncThunk(
   async (friendGroup: string, thunkAPI) => {
     try{
       const response = await getFriendGroupEvents(friendGroup);
-      thunkAPI.dispatch(loadEvents(response));
+      const formattedResponse = dateFormatter(response)
+      thunkAPI.dispatch(loadEvents(formattedResponse));
     }catch(error) {
       return thunkAPI.rejectWithValue(error)
     }
@@ -67,7 +77,8 @@ export const getFriendEventsThunk = createAsyncThunk(
   async (friend: string, thunkAPI) => {
     try{
       const response = await getFriendEvents(friend);
-      thunkAPI.dispatch(loadEvents(response));
+      const formattedResponse = dateFormatter(response)
+      thunkAPI.dispatch(loadEvents(formattedResponse));
     }catch(error) {
       return thunkAPI.rejectWithValue(error)
     }

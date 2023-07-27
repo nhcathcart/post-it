@@ -1,4 +1,6 @@
 import { Event } from "react-big-calendar";
+import { CustomEvent } from "../reducers/eventsReducer";
+
 
 export async function getEvents() {
   const response = await fetch("/api/events/get-events", {
