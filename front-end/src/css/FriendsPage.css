@@ -174,3 +174,8 @@
   flex-shrink: 1;
   box-sizing: border-box;
 }
+.form-search-list-container{
+  width: 100%;
+  height: 90%;
+  overflow-y: scroll;
+}

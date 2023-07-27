@@ -7,7 +7,7 @@ import {
   addNewGroupFriend,
   friendSearchAllThunk,
   removeNewGroupFriend,
-  filterViewableFriends
+  filterViewableFriends,
 } from "../reducers/friendsReducer";
 import { v4 as uuid } from "uuid";
 
@@ -20,7 +20,12 @@ export default function FriendGroupForm() {
       return (
         <div className="staged-friend-bubble" key={uuid()}>
           <p>{username}</p>
-          <button className="expand-button" onClick={()=>{dispatch(removeNewGroupFriend(username))}}>
+          <button
+            className="expand-button"
+            onClick={() => {
+              dispatch(removeNewGroupFriend(username));
+            }}
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -73,8 +78,8 @@ export default function FriendGroupForm() {
         />
       </div>
       <div className="staged-friend-container">{newGroupFriends}</div>
-      <div className="friends-content-container">
-        <div className="friends-list-container">
+      <div className="friends-content-container" style={{ maxHeight: "40%" }}>
+        <div className="friends-list-container" style={{height: "100%"}}>
           <h3>Friends</h3>
           <input
             type="text"
@@ -84,7 +89,7 @@ export default function FriendGroupForm() {
               dispatch(filterViewableFriends(e.target.value));
             }}
           />
-          {searchList}
+          <div className="form-search-list-container">{searchList}</div>
         </div>
       </div>
       <button
