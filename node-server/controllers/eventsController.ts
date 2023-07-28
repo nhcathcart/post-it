@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { ErrorObject } from "../index";
+import { makeFriendEventObj } from "../helpers"
 import db from "../db";
 import dotenv from "dotenv";
 
@@ -133,46 +134,42 @@ const eventsController = {
   },
   getFriendEvents: async (req: Request, res: Response, next: NextFunction) => {
     const { username } = res.locals;
-    const { friend } = req.body;
-
+  
     const query = `
-    WITH user_info AS (
-      SELECT id
-      FROM users
-      WHERE username = $1
-    ), friend_info AS (
-      SELECT id
-      FROM users
-      WHERE username = $2
-    ), user_and_friend_events AS (
+      WITH user_info AS (
+        SELECT id
+        FROM users
+        WHERE username = $1
+      ), friend_ids AS (
+        SELECT friend_id
+        FROM friends
+        WHERE user_id = (SELECT id FROM user_info)
+      ), friends_events AS (
+        SELECT
+          user_id,
+          title,
+          start_date AS start,
+          end_date AS end,
+          all_day,
+          resource
+        FROM events
+        WHERE events.user_id IN (SELECT friend_id FROM friend_ids)
+      )
       SELECT
-        user_id,
-        title,
-        start_date AS start,
-        end_date AS end,
-        all_day,
-        resource
-      FROM events
-      WHERE events.user_id = (SELECT id FROM user_info)
-         OR events.user_id = (SELECT id FROM friend_info)
-    )
-    SELECT
-      users.username,
-      events.title,
-      events.start,
-      events.end,
-      events.all_day,
-      events.resource
-    FROM user_and_friend_events AS events
-    JOIN users ON events.user_id = users.id;
-    
+        users.username,
+        events.title,
+        events.start,
+        events.end,
+        events.all_day,
+        events.resource
+      FROM friends_events AS events
+      JOIN users ON events.user_id = users.id;
     `;
-
-    const values = [username, friend];
-
+  
     try {
-      const result = await db.query(query, values);
-      res.locals.friendEvents = result.rows;
+      const result = await db.query(query, [username]);
+      res.locals.friendEvents = makeFriendEventObj(result.rows);
+      console.log(makeFriendEventObj(result.rows))
       return next();
     } catch (err) {
       const errorObj = {
@@ -185,6 +182,8 @@ const eventsController = {
       next(errorObj);
     }
   },
+  
+  
 };
 
 export default eventsController;
