@@ -23,19 +23,21 @@ export default function Homepage() {
       <Navbar />
       <div className="content-container">
         <div className="homepage-card">
-          <h4 style={{ display: "inline" }}>
-            You are free after 7pm on{" "}
-            <span className="big-number">{availObj["fri"]}</span> Fridays in the
-            next 3 weeks
-          </h4>
-          <h4 style={{ display: "inline" }}>
-            You have <span className="big-number">{availObj["sat"]}</span> free
-            Saturdays in the next 3 weeks
-          </h4>
-          <h4 style={{ display: "inline" }}>
-            You have <span className="big-number">{availObj["sun"]}</span> free
-            Sundays in the next 3 weeks
-          </h4>
+          <div className="homepage-card-text-container">
+            <h4>You have</h4>
+            <div className="big-number">{availObj["fri"]}</div>{" "}
+            <h4>free Fridays in the next 3 weeks</h4>
+          </div>
+          <div className="homepage-card-text-container">
+            <h4>You have</h4>
+            <div className="big-number">{availObj["sat"]}</div>{" "}
+            <h4>free Saturdays in the next 3 weeks</h4>
+          </div>
+          <div className="homepage-card-text-container">
+            <h4>You have </h4>
+            <div className="big-number">{availObj["sun"]}</div>{" "}
+            <h4>free Sundays in the next 3 weeks</h4>
+          </div>
         </div>
 
         <div className="homepage-card" style={{ marginTop: "2%" }}>

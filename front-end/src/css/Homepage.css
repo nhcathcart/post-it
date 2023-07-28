@@ -14,5 +14,14 @@
 }
 .big-number{
     font-size: 30px;
-    color: #eb9486
+    color: #eb9486;
+    margin: 0 10px
+}
+.homepage-card-text-container{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  height: 30%;
+  line-height: 30%;
 }
