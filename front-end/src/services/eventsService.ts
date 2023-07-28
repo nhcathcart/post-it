@@ -26,14 +26,14 @@ export async function getFriendGroupEvents(friendGroup: string) {
   }
   return responseParsed;
 }
-export async function getFriendEvents(friend: string) {
+export async function getFriendEvents() {
   const response = await fetch("/api/events/get-friend-events", {
     method: "POST",
     credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({friend: friend}),
+    body: JSON.stringify({}),
   });
   const responseParsed = await response.json();
   console.log(responseParsed)

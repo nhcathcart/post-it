@@ -10,6 +10,7 @@ import {
   getFriendEventsThunk,
   CustomEvent,
   dateFormatter,
+  setViewChoice,
 } from "../reducers/eventsReducer";
 import {
   getFriendGroupsThunk,
@@ -20,14 +21,15 @@ const localizer = momentLocalizer(moment);
 
 export function MyCalendar() {
   const dispatch = useAppDispatch();
-  const state = useAppSelector((state) => state.events.events);
+  const state = useAppSelector((state) => state.events);
   const friendsState = useAppSelector((state) => state.friends);
   const colorPointer = makeColorPointer(friendsState.friends);
-  console.log(state)
-  console.log("formated: ", dateFormatter(state))
   const friendGroupSet = makeFriendGroupSet();
+  const eventList = makeEventList(state.viewChoice)
+
   useEffect(() => {
     dispatch(getEventsThunk());
+    dispatch(getFriendEventsThunk())
     dispatch(getFriendGroupsThunk());
     dispatch(loadFriendsThunk());
   }, []);
@@ -42,6 +44,24 @@ export function MyCalendar() {
     []
   );
   //helpers
+  function makeEventList(viewChoice: string[]) {
+    let eventList;
+    if (state.viewChoice.length === 0) {
+      eventList = state.events;
+      return eventList
+    } else{
+      console.log("HERE")
+      const friendEvents: any = [];
+      viewChoice.forEach((str) => {
+        const key = str.split(" ")[0]
+        state.friendEvents[key]?.forEach((event) => {
+          friendEvents.push(event);
+        })
+      })
+      const output = state.events.concat(friendEvents)
+      return output
+    };
+  }
   function makeColorPointer(friends: string[]) {
     const colorPointer: any = {};
     const colorArray = [
@@ -79,11 +99,20 @@ export function MyCalendar() {
     return colorPointer;
   }
   function handleSelectChange(e: React.ChangeEvent<HTMLSelectElement>) {
-    if (friendGroupSet.has(e.target.value)) {
-      dispatch(getFriendGroupEventsThunk(e.target.value));
+    if (e.target.value === "Just me") {
+      dispatch(setViewChoice([]));
       return;
+    }else if (friendGroupSet.has(e.target.value)){
+      friendsState.friendGroups.forEach((element) => {
+        if (element.name === e.target.value) {
+          dispatch(setViewChoice(element.friends));
+          return;
+        }
+      });
+    }else{
+      dispatch(setViewChoice([e.target.value]));
     }
-    dispatch(getFriendEventsThunk(e.target.value));
+    
   }
   function makeFriendGroupSet() {
     const output = new Set(
@@ -195,7 +224,7 @@ export function MyCalendar() {
       <Calendar
         localizer={localizer}
         style={{ height: "90%", width: "87%" }}
-        events={dateFormatter(state)}
+        events={dateFormatter(eventList)}
         components={components}
         eventPropGetter={customEventPropGetter}
       />

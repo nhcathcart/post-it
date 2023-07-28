@@ -19,9 +19,13 @@ export interface CustomEvent {
   allDay?: boolean
   resource?: any,
 }
-
+type FriendEvents = {
+  [username: string]: CustomEvent[]; // Index signature: dynamic keys (usernames) mapped to arrays of EventObjects
+};
 const initialState: EventsStateType = {
   events: [],
+  friendEvents: {},
+  viewChoice: [],
   newEvent: {
     title: "",
     start: undefined,
@@ -33,6 +37,8 @@ const initialState: EventsStateType = {
 
 interface EventsStateType {
   events: CustomEvent[];
+  friendEvents: FriendEvents;
+  viewChoice: string[];
   newEvent: Event;
 }
 //helper function to format date strings into date objects in event objects
@@ -77,11 +83,11 @@ export const getFriendGroupEventsThunk = createAsyncThunk(
 )
 export const getFriendEventsThunk = createAsyncThunk(
   "/api/events/get-friend-events",
-  async (friend: string, thunkAPI) => {
+  async (_, thunkAPI) => {
     try{
-      const response = await getFriendEvents(friend);
+      const response = await getFriendEvents();
       // const formattedResponse = dateFormatter(response)
-      thunkAPI.dispatch(loadEvents(response));
+      thunkAPI.dispatch(loadFriendEvents(response));
     }catch(error) {
       return thunkAPI.rejectWithValue(error)
     }
@@ -125,6 +131,12 @@ export const eventsSlice = createSlice({
     },
     loadEvents: (state, action) => {
       state.events = action.payload
+    },
+    loadFriendEvents: (state, action) => {
+      state.friendEvents = action.payload
+    },
+    setViewChoice: (state, action) => {
+      state.viewChoice = action.payload
     }
   },
 });
@@ -137,6 +149,8 @@ export const {
   updateResource,
   updateEvents,
   loadEvents,
+  loadFriendEvents,
+  setViewChoice,
 } = eventsSlice.actions;
 
 export default eventsSlice.reducer;
