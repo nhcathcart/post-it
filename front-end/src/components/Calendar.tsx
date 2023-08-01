@@ -50,7 +50,6 @@ export function MyCalendar() {
       eventList = state.events;
       return eventList
     } else{
-      console.log("HERE")
       const friendEvents: any = [];
       viewChoice.forEach((str) => {
         const key = str.split(" ")[0]
