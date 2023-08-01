@@ -10,8 +10,8 @@ CREATE TABLE events (
   id SERIAL PRIMARY KEY,
   user_id INT NOT NULL,
   title VARCHAR(50) NOT NULL,
-  start_date TIMESTAMP NOT NULL,
-  end_date TIMESTAMP NOT NULL,
+  start_date TIMESTAMP WITH TIME ZONE NOT NULL,
+  end_date TIMESTAMP WITH TIME ZONE NOT NULL,
   all_day BOOL NOT NULL,
   resource VARCHAR(500)
 );
