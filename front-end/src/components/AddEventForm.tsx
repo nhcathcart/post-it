@@ -15,6 +15,7 @@ import {
   updateEvents,
   postEventThunk,
 } from "../reducers/eventsReducer";
+import moment from "moment";
 
 // Event {
 //   title: string,
@@ -26,9 +27,9 @@ import {
 
 export default function AddEventForm() {
   const dispatch = useAppDispatch();
-  const state = useAppSelector(state => state.events.newEvent)
-  const start = state.start
-  const end = state.end
+  const state = useAppSelector((state) => state.events.newEvent);
+  const start = state.start;
+  const end = state.end;
 
   return (
     <div className="event-form-container">
@@ -40,25 +41,37 @@ export default function AddEventForm() {
       />
       <DateTimePicker
         onChange={(date) => {
-            dispatch(updateStart(date?.toISOString()));
-            dispatch(updateEnd(date?.toISOString()));
+          dispatch(updateStart(moment(date).format()));
+          dispatch(updateEnd(moment(date).format()));
+          // dispatch(updateStart(date?.toISOString()));
+          // dispatch(updateEnd(date?.toISOString()));
         }}
         value={start}
         disableClock={true}
       />
-      <DateTimePicker 
+      <DateTimePicker
         onChange={(date) => {
-            dispatch(updateEnd(date?.toISOString()))
+          dispatch(updateEnd(date?.toISOString()));
         }}
-        value={end} 
-        disableClock={true} 
+        value={end}
+        disableClock={true}
       />
       <span>
         <label>All day</label>
-        <input type="checkbox" onChange={(e) => dispatch(updateAllDay(e.target.checked))}/>
+        <input
+          type="checkbox"
+          onChange={(e) => dispatch(updateAllDay(e.target.checked))}
+        />
       </span>
-      <textarea className="event-form-text-area" onChange={(e) => dispatch(updateResource(e.target.value))}></textarea>
-      <button className="button" style={{ width: "50%" }} onClick={() => dispatch(postEventThunk(state))}>
+      <textarea
+        className="event-form-text-area"
+        onChange={(e) => dispatch(updateResource(e.target.value))}
+      ></textarea>
+      <button
+        className="button"
+        style={{ width: "50%" }}
+        onClick={() => dispatch(postEventThunk(state))}
+      >
         Add Event
       </button>
     </div>
