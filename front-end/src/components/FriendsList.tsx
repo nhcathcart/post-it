@@ -13,6 +13,7 @@ import {
 } from "../reducers/friendsReducer";
 import { ModalButton } from "./ModalButton";
 import { FriendsPending } from "./FriendsPending";
+import "../css/FriendsList.css"
 
 export default function FriendsList() {
   const dispatch = useAppDispatch();
@@ -20,11 +21,11 @@ export default function FriendsList() {
 
   const friendsList = state.viewableFriends.map((friend) => {
     return (
-      <div className="friend-bubble" key={uuid()}>
+      <div className="friend-list-bubble" key={uuid()}>
         <p>{friend}</p>
-        <button className="expand-button">
+        <button className="svg-button">
           <svg
-            style={{width: "20px", height:  '20px', color: "#ccc"}}
+            style={{ width: "20px", height: "20px", color: "#ccc" }}
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -44,7 +45,7 @@ export default function FriendsList() {
   });
   const sentFriendRequests = state.sentFriendRequests.map((friend) => {
     return (
-      <div className="friend-bubble" key={uuid()}>
+      <div className="friend-list-bubble" key={uuid()}>
         <p>{friend}--Pending</p>
       </div>
     );
@@ -55,27 +56,25 @@ export default function FriendsList() {
     dispatch(loadSentFriendRequestsThunk());
   }, []);
   return (
-    <div className="friends-content-container">
-      <div className="friends-list-container">
-        <div className="friends-button-container">
-          <ModalButton
-            isDefault={false}
-            cssClass="friend-button"
-            text="Friend Requests"
-          >
-            <FriendsPending />
-          </ModalButton>
-        </div>
-        <h3>Friends</h3>
-        <input
-          type="text"
-          placeholder="search"
-          className="friend-search-input"
-          onChange={(e) => dispatch(filterViewableFriends(e.target.value))}
-        />
-        {friendsList}
-        {sentFriendRequests}
+    <div className="friends-list-container">
+      <div className="friends-list-button-container">
+        <ModalButton
+          isDefault={false}
+          cssClass="friend-button"
+          text="Friend Requests"
+        >
+          <FriendsPending />
+        </ModalButton>
       </div>
+      <h3>Friends</h3>
+      <input
+        type="text"
+        placeholder="search"
+        className="friend-search-input"
+        onChange={(e) => dispatch(filterViewableFriends(e.target.value))}
+      />
+      {friendsList}
+      {sentFriendRequests}
     </div>
   );
 }

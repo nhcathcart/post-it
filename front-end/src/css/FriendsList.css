@@ -1,0 +1,71 @@
+.friends-list-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  margin-top: 1%;
+}
+.friend-list-bubble {
+  display: flex;
+  flex-direction: row;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 10px;
+  border-radius: 20px;
+  border: 1px solid #ccc;
+  width: 95%;
+  padding-top: 2%;
+  padding-bottom: 2%;
+  padding-right: 6%;
+  padding-left: 6%;
+  color: black;
+}
+.friends-list-button-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  width: 100%;
+}
+.friend-button {
+  width: fit-content;
+  border-radius: 20px;
+  border: none;
+  padding: 2%;
+  background-color: #6c9594;
+  color: #ffffff;
+  font-family: inherit;
+}
+.friend-search-input {
+  width: 60%;
+  border-radius: 20px;
+  padding: 3%;
+  border: 1px solid #ccc;
+  font-family: inherit;
+  margin-bottom: 10px;
+}
+.svg-button-icon {
+  width: 1rem;
+  height: 1rem;
+  display: inline;
+  vertical-align: middle;
+}
+.svg-button {
+  border: none;
+  background-color: white;
+}
+@media (min-width: 1024px) {
+  .friends-list-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    width: 50%;
+    height: 100%;
+  }
+  .friend-list-bubble {
+    
+  }
+}
