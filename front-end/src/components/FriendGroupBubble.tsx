@@ -39,7 +39,7 @@ export function FriendGroupBubble(props: {
     );
   });
   return (
-    <div className="friend-bubble">
+    <div className="friend-bubble-outer">
       <div className="title-and-button-container">
         <button
           type="button"

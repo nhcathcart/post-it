@@ -21,11 +21,27 @@
   width: 50%;
   height: 100%;
 }
-.friend-bubble {
+.friend-bubble-outer{
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
   align-items: flex-start;
+  justify-content: space-between;
+  font-size: 10px;
+  border-radius: 20px;
+  border: 1px solid #ccc;
+  width: 100%;
+  padding-top: 2%;
+  padding-bottom: 2%;
+  padding-right: 6%;
+  padding-left: 6%;
+  color: black
+}
+.friend-bubble {
+  display: flex;
+  flex-direction: row;
+  box-sizing: border-box;
+  align-items: center;
   justify-content: space-between;
   font-size: 10px;
   border-radius: 20px;
