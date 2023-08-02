@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import { v4 as uuid } from "uuid";
 import { getFriendGroupsThunk } from "../reducers/friendsReducer"
 import { FriendGroupBubble } from "./FriendGroupBubble";
+import "../css/FriendGroups.css"
 
 export default function FriendGroup() {
   const dispatch = useAppDispatch();
@@ -20,9 +21,8 @@ export default function FriendGroup() {
     dispatch(getFriendGroupsThunk())
   }, [])
   return (
-    <div className="friends-content-container">
-      <div className="friends-list-container">
-        <div className="friends-button-container">
+      <div className="friend-group-list-container">
+        <div className="right-align-button-container">
           <ModalButton
             isDefault={false}
             cssClass="friend-button"
@@ -34,6 +34,5 @@ export default function FriendGroup() {
         <h3>Friend Groups</h3>
         {friendGroupsList}
       </div>
-    </div>
   );
 }

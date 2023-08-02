@@ -39,11 +39,11 @@ export function FriendGroupBubble(props: {
     );
   });
   return (
-    <div className="friend-bubble-outer">
+    <div className="friend-group-bubble">
       <div className="title-and-button-container">
         <button
           type="button"
-          className="expand-button"
+          className="svg-button"
           onClick={() => {
             setExpand(!expand);
           }}
@@ -55,7 +55,7 @@ export function FriendGroupBubble(props: {
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="expand-icon"
+              className="svg-button-icon"
               style={{
                 transform: expand ? "rotate(90deg)" : "rotate(0)",
               }}
@@ -69,16 +69,18 @@ export function FriendGroupBubble(props: {
             {title}
           </span>
         </button>
-        <div className="bubble-button-conatiner">
-          <button className="friend-button">Find-Dates</button>
-        </div>
+        
       </div>
 
       <div
         style={{ display: expand ? "flex" : "none" }}
         className="expand-container"
       >
+        <div className="right-align-button-container">
+          <button className="friend-button" style={{marginBottom: "5px"}}>Find-Dates</button>
+        </div>
         {friendsList}
+        <div className="right-align-button-container">
         <button
           className="danger-button"
           style={{ marginTop: "5px" }}
@@ -87,6 +89,8 @@ export function FriendGroupBubble(props: {
           Delete-Group
         </button>
       </div>
+      </div>
+      
     </div>
   );
 }
