@@ -44,12 +44,12 @@ interface EventsStateType {
 //helper function to format date strings into date objects in event objects
 export function dateFormatter (events: CustomEvent[]){
   const newEventArray: CustomEvent[] = []
-  events.forEach((event) => {
+  if (events?.length){events?.forEach((event) => {
     const newEvent = Object.assign({}, event)
     newEvent.start = new Date(event.start)
     newEvent.end = new Date(event.end)
     newEventArray.push(newEvent)
-  })
+  })}
   return newEventArray;
 }
 

@@ -36,7 +36,6 @@ export async function getFriendEvents() {
     body: JSON.stringify({}),
   });
   const responseParsed = await response.json();
-  console.log(responseParsed)
   if (response.status >= 400) {
     throw new Error("Problems deleteing friend group");
   }
