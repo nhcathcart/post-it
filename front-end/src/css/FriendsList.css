@@ -38,6 +38,12 @@
   color: #ffffff;
   font-family: inherit;
 }
+.friend-button:active{
+  transform: scale(.95);
+}
+.friend-button:hover{
+  background-color: #5a7d7cff;
+}
 .friend-search-input {
   width: 60%;
   border-radius: 20px;

@@ -16,6 +16,12 @@
   color: #ffffff;
   font-family: inherit;
 }
+.friend-button:active{
+  transform: scale(.95);
+}
+.friend-button:hover{
+  background-color: #5a7d7cff;
+}
 .friend-group-bubble {
   display: flex;
   flex-direction: column;
@@ -87,6 +93,12 @@
   background-color: #8b0000;
   color: #ffffff;
   font-family: inherit;
+}
+.danger-button:active{
+  transform: scale(.95);
+}
+.danger-button:hover{
+  background-color: #b40202;
 }
 @media (min-width: 1024px) {
   .friend-group-list-container {
