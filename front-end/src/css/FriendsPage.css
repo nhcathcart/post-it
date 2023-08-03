@@ -212,7 +212,9 @@
 .title-and-button-container{
   display: flex;
   justify-content: space-between;
+  align-items: center
   width: 100%;
+
 }
 .staged-friend-container{
   display: flex;

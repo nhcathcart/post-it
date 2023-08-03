@@ -29,10 +29,17 @@
   justify-content: center;
   align-items: center;
   overflow-y: scroll;
-  height: 60%;
-  width: 60%;
+  height: 90%;
+  width: 90%;
   padding: 0.5%;
   border-radius: 10px;
   background-color: #ffffff;
   z-index: 10000;
+}
+
+@media (min-width: 1024px) {
+  .modal-content{
+    width: 60%;
+    height: 80%;
+  }
 }
