@@ -409,5 +409,94 @@ const friendsController = {
             next(errorObj);
         }
     }),
+    getPins: (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+        const { username } = res.locals;
+        const query = `
+    WITH user_info AS (
+      SELECT id AS user_id
+      FROM users
+      WHERE username = $1
+    )
+      SELECT friend_or_group_name
+      FROM pins
+      WHERE owner_id = (SELECT id FROM users WHERE username = $1)
+    `;
+        const values = [username];
+        try {
+            const result = yield db_1.default.query(query, values);
+            res.locals.pins = result.rows.map((item) => item.friend_or_group_name);
+            return next();
+        }
+        catch (err) {
+            const errorObj = {
+                log: `There was an error in the getPendingFriendRequests middleware: ${err}`,
+                status: 500,
+                message: {
+                    err: `There was a problem getting pending friend requests.`,
+                },
+            };
+            next(errorObj);
+        }
+    }),
+    addPin: (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+        const { username } = res.locals;
+        const { pinToInsert } = req.body;
+        console.log("HERE");
+        const query = `
+    WITH user_info AS (
+      SELECT id AS user_id
+      FROM users
+      WHERE username = $1
+    )
+    INSERT INTO pins (owner_id, friend_or_group_name)
+    SELECT user_id, $2
+    FROM user_info;
+    `;
+        const values = [username, pinToInsert];
+        try {
+            const result = yield db_1.default.query(query, values);
+            res.locals.pins = result.rows;
+            return next();
+        }
+        catch (err) {
+            const errorObj = {
+                log: `There was an error in the getPendingFriendRequests middleware: ${err}`,
+                status: 500,
+                message: {
+                    err: `There was a problem getting pending friend requests.`,
+                },
+            };
+            next(errorObj);
+        }
+    }),
+    removePin: (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+        const { username } = res.locals;
+        const { pinToRemove } = req.body;
+        const query = `
+    WITH user_info AS (
+      SELECT id AS user_id
+      FROM users
+      WHERE username = $1
+    )
+    DELETE FROM pins
+    WHERE owner_id = (SELECT user_id FROM user_info) AND friend_or_group_name = $2;
+    `;
+        const values = [username, pinToRemove];
+        try {
+            const result = yield db_1.default.query(query, values);
+            res.locals.pins = result.rows;
+            return next();
+        }
+        catch (err) {
+            const errorObj = {
+                log: `There was an error in the getPendingFriendRequests middleware: ${err}`,
+                status: 500,
+                message: {
+                    err: `There was a problem getting pending friend requests.`,
+                },
+            };
+            next(errorObj);
+        }
+    }),
 };
 exports.default = friendsController;
