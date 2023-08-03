@@ -185,9 +185,7 @@ export function MyCalendar() {
               {view}
             </button>
           ))}
-          <ModalButton isDefault={true} text="Add">
-            <AddEventForm />
-          </ModalButton>
+          
         </div>
       </div>
     );
@@ -219,6 +217,9 @@ export function MyCalendar() {
             );
           })}
         </select>
+        <ModalButton isDefault={false} cssClass="add-button" text="Add">
+            <AddEventForm />
+          </ModalButton>
       </div>
       <Calendar
         localizer={localizer}

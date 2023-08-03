@@ -12,7 +12,7 @@ export default function Homepage() {
   const dispatch = useAppDispatch();
   const state = useAppSelector((state) => state.login);
   const eventState = useAppSelector((state) => state.events);
-  const availObj = createAvailObj(dateFormatter(eventState.events));
+  const availObj = eventState.events.length? createAvailObj(dateFormatter(eventState.events)) : null;
   console.log(availObj);
   useEffect(() => {
     dispatch(getEventsThunk());
@@ -25,17 +25,17 @@ export default function Homepage() {
         <div className="homepage-card">
           <div className="homepage-card-text-container">
             <h4>You have</h4>
-            <div className="big-number">{availObj["fri"]}</div>{" "}
+            <div className="big-number">{availObj? availObj["fri"] : "loading"}</div>{" "}
             <h4>free Fridays in the next 3 weeks</h4>
           </div>
           <div className="homepage-card-text-container">
             <h4>You have</h4>
-            <div className="big-number">{availObj["sat"]}</div>{" "}
+            <div className="big-number">{availObj? availObj["sat"] : "loading"}</div>{" "}
             <h4>free Saturdays in the next 3 weeks</h4>
           </div>
           <div className="homepage-card-text-container">
             <h4>You have </h4>
-            <div className="big-number">{availObj["sun"]}</div>{" "}
+            <div className="big-number">{availObj? availObj["sun"] : "loading"}</div>{" "}
             <h4>free Sundays in the next 3 weeks</h4>
           </div>
         </div>

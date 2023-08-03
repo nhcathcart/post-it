@@ -47,4 +47,12 @@ CREATE TABLE group_members (
   FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
 
+-- CREATE TABLE pins (
+--   id SERIAL PRIMARY KEY,
+--   owner_id INT NOt NULL,
+--   friend_id INT NOT NULL,
+--   FOREIGN KEY (owner_id) REFERENCES users (id) ON DELETE CASCADE,
+--   FOREIGN KEY (friend_id) REFERENCES friends (id) ON DELETE CASCADE
+-- );
+
 

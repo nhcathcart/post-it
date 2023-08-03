@@ -1,4 +1,4 @@
-import "../css/FriendsPage.css";
+import "../css/FriendGroupForm.css";
 import "../css/utility-css.css";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import {
@@ -21,7 +21,7 @@ export default function FriendGroupForm() {
         <div className="staged-friend-bubble" key={uuid()}>
           <p>{username}</p>
           <button
-            className="expand-button"
+            className="svg-button"
             onClick={() => {
               dispatch(removeNewGroupFriend(username));
             }}
@@ -32,7 +32,7 @@ export default function FriendGroupForm() {
               viewBox="0 0 24 24"
               stroke-width="1.5"
               stroke="currentColor"
-              className="expand-icon"
+              className="svg-button-icon"
             >
               <path
                 stroke-linecap="round"
@@ -78,8 +78,8 @@ export default function FriendGroupForm() {
         />
       </div>
       <div className="staged-friend-container">{newGroupFriends}</div>
-      <div className="friends-content-container" style={{ maxHeight: "40%" }}>
-        <div className="friends-list-container" style={{height: "100%"}}>
+      <div className="form-content-container" style={{ height: "60%" }}>
+        <div className="form-list-container" style={{height: "100%"}}>
           <h3>Friends</h3>
           <input
             type="text"

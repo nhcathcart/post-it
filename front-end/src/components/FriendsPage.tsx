@@ -3,10 +3,6 @@ import "../css/utility-css.css";
 import "../css/FriendsPage.css";
 import { Navbar } from "./Navbar";
 import {
-  updateFriendGroupSearch,
-  updateFriendSearch,
-  filterViewableFriendGroups,
-  filterViewableFriends,
   toggleFriendsList,
   toggleFriendGroups,
   toggleFindFriends,
@@ -44,9 +40,11 @@ export default function FriendsPage() {
               Find Friends
             </button>
           </div>
-          {state.friendsList ? <FriendsList /> : null}
-          {state.friendGroups ? <FriendGroup /> : null}
-          {state.findFriends ? <FindFriends /> : null}
+          <div className="friends-content-container">
+            {state.friendsList ? <FriendsList /> : null}
+            {state.friendGroups ? <FriendGroup /> : null}
+            {state.findFriends ? <FindFriends /> : null}
+          </div>
         </div>
       </div>
     </div>
