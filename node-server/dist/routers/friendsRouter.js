@@ -48,4 +48,16 @@ router.delete("/delete-friend-group", authController_1.default.checkCookie, frie
 router.get("/get-friend-groups", authController_1.default.checkCookie, friendsController_1.default.getFriendGroups, (req, res) => {
     return res.json(res.locals.friendGroups);
 });
+router.get("/get-pins", authController_1.default.checkCookie, friendsController_1.default.getPins, (req, res) => {
+    return res.json(res.locals.pins);
+    ;
+});
+router.post("/add-pin", authController_1.default.checkCookie, friendsController_1.default.addPin, (req, res) => {
+    return res.json("SUCCESS");
+    ;
+});
+router.post("/remove-pin", authController_1.default.checkCookie, friendsController_1.default.removePin, (req, res) => {
+    return res.json("SUCCESS");
+    ;
+});
 exports.default = router;

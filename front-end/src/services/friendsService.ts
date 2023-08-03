@@ -176,3 +176,47 @@ export async function deleteFriendGroup(groupName: string) {
   }
   return responseParsed
 }
+export async function addPin (pinName: string){
+  const response  = await fetch("/api/friends/add-pin", {
+    method: "POST",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({pinToInsert: pinName}),
+  })
+  const responseParsed = await response.json();
+  if (response.status >= 400) {
+    throw new Error("Problems adding pin");
+  }
+  return responseParsed
+}
+export async function removePin (pinName: string){
+  const response  = await fetch("/api/friends/remove-pin", {
+    method: "POST",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({pinToRemove: pinName}),
+  })
+  const responseParsed = await response.json();
+  if (response.status >= 400) {
+    throw new Error("Problems removing pin");
+  }
+  return responseParsed
+}
+export async function getPins (){
+  const response  = await fetch("/api/friends/get-pins", {
+    method: "GET",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+  const responseParsed = await response.json();
+  if (response.status >= 400) {
+    throw new Error("Problems removing pin");
+  }
+  return responseParsed
+}

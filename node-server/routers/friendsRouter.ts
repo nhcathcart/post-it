@@ -103,5 +103,29 @@ router.get(
     return res.json(res.locals.friendGroups);
   }
 );
+router.get(
+  "/get-pins",
+  authController.checkCookie,
+  friendsController.getPins,
+  (req, res) => {
+    return res.json(res.locals.pins);;
+  }
+);
+router.post(
+  "/add-pin",
+  authController.checkCookie,
+  friendsController.addPin,
+  (req, res) => {
+    return res.json("SUCCESS");;
+  }
+);
+router.post(
+  "/remove-pin",
+  authController.checkCookie,
+  friendsController.removePin,
+  (req, res) => {
+    return res.json("SUCCESS");;
+  }
+);
 
 export default router;

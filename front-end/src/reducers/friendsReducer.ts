@@ -12,6 +12,9 @@ import {
   removeFriendFromGroup,
   deleteFriendGroup,
   loadSentFriendRequests,
+  getPins,
+  addPin,
+  removePin,
 } from "../services/friendsService";
 import FriendGroup from "../components/FriendGroups";
 
@@ -25,6 +28,7 @@ interface FriendState {
   newFriendGroup: FriendGroup;
   friendGroups: FriendGroup[];
   friendsView: FriendsView;
+  pins: string[];
 }
 
 interface FriendGroup {
@@ -52,6 +56,7 @@ const initialState: FriendState = {
     friendGroups: false,
     findFriends: false,
   },
+  pins: [],
 };
 
 //Thunks, these use functions imported from the eventsService
@@ -193,6 +198,39 @@ export const deleteFriendGroupThunk = createAsyncThunk(
     }
   }
 );
+export const addPinThunk = createAsyncThunk(
+  "/api/friends/add-pin",
+  async (pinName: string, thunkAPI) => {
+    try {
+      const response = await addPin(pinName);
+      thunkAPI.dispatch(updatePinAdd(pinName));
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+export const removePinThunk = createAsyncThunk(
+  "/api/friends/remove-pin",
+  async (pinName: string, thunkAPI) => {
+    try {
+      const response = await removePin(pinName);
+      thunkAPI.dispatch(updatePinRemove(pinName));
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+export const getPinsThunk = createAsyncThunk(
+  "/api/friends/get-pins",
+  async (_, thunkAPI) => {
+    try {
+      const response = await getPins();
+      thunkAPI.dispatch(loadPins(response));
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
 //helpers
 function filterByPrefix(strings: string[], search: string): string[] {
   const lowercasedSearch = search.toLowerCase();
@@ -284,6 +322,15 @@ export const friendsSlice = createSlice({
       state.friendsView.friendGroups = false;
       state.friendsView.findFriends = true;
     },
+    updatePinAdd: (state, action) => {
+      state.pins.push(action.payload);
+    },
+    updatePinRemove: (state, action) => {
+      state.pins = state.pins.filter((item) => item !== action.payload)
+    },
+    loadPins: (state, action) => {
+      state.pins = action.payload;
+    }
   },
 });
 
@@ -308,6 +355,9 @@ export const {
   removeGroupFromGroupList,
   loadSentFriendRequestsList,
   pushtoSentFriendRequests,
+  updatePinAdd,
+  updatePinRemove,
+  loadPins,
 } = friendsSlice.actions;
 
 export default friendsSlice.reducer;

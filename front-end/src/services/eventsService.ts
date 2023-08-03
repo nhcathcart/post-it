@@ -51,6 +51,7 @@ export async function postEvent(event: Event) {
     },
     body: JSON.stringify(event),
   });
-  const responseParsed = response.json();
+  const responseParsed = await response.json();
   return responseParsed;
 }
+

@@ -12,7 +12,7 @@ export default function Homepage() {
   const dispatch = useAppDispatch();
   const state = useAppSelector((state) => state.login);
   const eventState = useAppSelector((state) => state.events);
-  const availObj = eventState.events.length? createAvailObj(dateFormatter(eventState.events)) : null;
+  const availObj = eventState.events? createAvailObj(dateFormatter(eventState.events)) : null;
   console.log(availObj);
   useEffect(() => {
     dispatch(getEventsThunk());
