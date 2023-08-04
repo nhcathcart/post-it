@@ -9,8 +9,27 @@ import {
 } from "../reducers/loginReducer";
 import { useAppDispatch, useAppSelector } from "../hooks";
 export default function CreateUserCard() {
+
   const dispatch = useAppDispatch();
   const state = useAppSelector((state) => state.login);
+
+  function handleSubmit() {
+    if (state.password !== state.confirmPass) {
+      alert("passwords must match");
+      return;
+    }
+    if (state.username === "") {
+      alert("username cannot be empty");
+      return;
+    }
+    dispatch(
+      createNewUser({
+        username: state.username,
+        password: state.password,
+      })
+    );
+  }
+  
   return (
     <>
       <div className="login-card">
@@ -42,12 +61,7 @@ export default function CreateUserCard() {
         <button
           className="button login-button"
           onClick={() => {
-            dispatch(
-              createNewUser({
-                username: state.username,
-                password: state.password,
-              })
-            );
+            handleSubmit();
           }}
         >
           submit
