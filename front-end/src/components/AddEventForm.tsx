@@ -51,7 +51,7 @@ export default function AddEventForm({ onClose }: props) {
     return;
   }
   return (
-    <div className="event-form-container">
+    <>
       <div className="modal-close-container">
         <button
           className="close-button"
@@ -75,47 +75,49 @@ export default function AddEventForm({ onClose }: props) {
           </svg>
         </button>
       </div>
-      <input
-        type="text"
-        placeholder="Event Title"
-        className="event-form-input"
-        onChange={(e) => dispatch(updateTitle(e.target.value))}
-      />
-      <DateTimePicker
-        onChange={(date) => {
-          dispatch(updateStart(moment(date).format()));
-          dispatch(updateEnd(moment(date).format()));
-          // dispatch(updateStart(date?.toISOString()));
-          // dispatch(updateEnd(date?.toISOString()));
-        }}
-        value={start}
-        disableClock={true}
-      />
-      <DateTimePicker
-        onChange={(date) => {
-          dispatch(updateEnd(date?.toISOString()));
-        }}
-        value={end}
-        disableClock={true}
-      />
-      <span>
-        <label>All day</label>
+      <div className="add-event-form-container">
         <input
-          type="checkbox"
-          onChange={(e) => dispatch(updateAllDay(e.target.checked))}
+          type="text"
+          placeholder="Event Title"
+          className="event-form-input"
+          onChange={(e) => dispatch(updateTitle(e.target.value))}
         />
-      </span>
-      <textarea
-        className="event-form-text-area"
-        onChange={(e) => dispatch(updateResource(e.target.value))}
-      ></textarea>
-      <button
-        className="button"
-        style={{ width: "50%" }}
-        onClick={() => handleSubmit()}
-      >
-        Add Event
-      </button>
-    </div>
+        <DateTimePicker
+          onChange={(date) => {
+            dispatch(updateStart(moment(date).format()));
+            dispatch(updateEnd(moment(date).format()));
+            // dispatch(updateStart(date?.toISOString()));
+            // dispatch(updateEnd(date?.toISOString()));
+          }}
+          value={start}
+          disableClock={true}
+        />
+        <DateTimePicker
+          onChange={(date) => {
+            dispatch(updateEnd(date?.toISOString()));
+          }}
+          value={end}
+          disableClock={true}
+        />
+        <span>
+          <label>All day</label>
+          <input
+            type="checkbox"
+            onChange={(e) => dispatch(updateAllDay(e.target.checked))}
+          />
+        </span>
+        <textarea
+          className="event-form-text-area"
+          onChange={(e) => dispatch(updateResource(e.target.value))}
+        ></textarea>
+        <button
+          className="button"
+          style={{ width: "50%" }}
+          onClick={() => handleSubmit()}
+        >
+          Add Event
+        </button>
+      </div>
+    </>
   );
 }

@@ -1,6 +1,6 @@
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ModalButton } from "./ModalButton";
 import AddEventForm from "./AddEventForm";
 import { useAppDispatch, useAppSelector } from "../hooks";
@@ -16,6 +16,8 @@ import {
   getFriendGroupsThunk,
   loadFriendsThunk,
 } from "../reducers/friendsReducer";
+import { Modal } from "../components/Modal";
+import CalendarPopup from "./CalendarPopup";
 
 const localizer = momentLocalizer(moment);
 
@@ -25,11 +27,18 @@ export function MyCalendar() {
   const friendsState = useAppSelector((state) => state.friends);
   const colorPointer = makeColorPointer(friendsState.friends);
   const friendGroupSet = makeFriendGroupSet();
-  const eventList = makeEventList(state.viewChoice)
+  const eventList = makeEventList(state.viewChoice);
+
+  const [showModal, setShowModal] = useState(false);
+  const [modalState, setModalState] = useState<CustomEvent | undefined>(undefined);
+  function onSelectEvent (calEvent: CustomEvent) {
+    setModalState(calEvent)
+    setShowModal(!showModal)
+  }
 
   useEffect(() => {
     dispatch(getEventsThunk());
-    dispatch(getFriendEventsThunk())
+    dispatch(getFriendEventsThunk());
     dispatch(getFriendGroupsThunk());
     dispatch(loadFriendsThunk());
   }, []);
@@ -48,18 +57,18 @@ export function MyCalendar() {
     let eventList;
     if (state.viewChoice.length === 0) {
       eventList = state.events;
-      return eventList
-    } else{
+      return eventList;
+    } else {
       const friendEvents: any = [];
       viewChoice.forEach((str) => {
-        const key = str.split(" ")[0]
+        const key = str.split(" ")[0];
         state.friendEvents[key]?.forEach((event) => {
           friendEvents.push(event);
-        })
-      })
-      const output = state.events.concat(friendEvents)
-      return output
-    };
+        });
+      });
+      const output = state.events.concat(friendEvents);
+      return output;
+    }
   }
   function makeColorPointer(friends: string[]) {
     const colorPointer: any = {};
@@ -101,17 +110,16 @@ export function MyCalendar() {
     if (e.target.value === "Just me") {
       dispatch(setViewChoice([]));
       return;
-    }else if (friendGroupSet.has(e.target.value)){
+    } else if (friendGroupSet.has(e.target.value)) {
       friendsState.friendGroups.forEach((element) => {
         if (element.name === e.target.value) {
           dispatch(setViewChoice(element.friends));
           return;
         }
       });
-    }else{
+    } else {
       dispatch(setViewChoice([e.target.value]));
     }
-    
   }
   function makeFriendGroupSet() {
     const output = new Set(
@@ -121,7 +129,8 @@ export function MyCalendar() {
   }
   //function to return event in the calendar component
   function customEvent(event: any) {
-    return <div>{event.title}</div>;
+    console.log(event)
+    return <div style={{ width: "100%", height: "100%" }}>{event.event.username? event.event.username : event.title}</div>;
   }
   //function to return styling for events in the calendar component
   function customEventPropGetter(
@@ -185,7 +194,6 @@ export function MyCalendar() {
               {view}
             </button>
           ))}
-          
         </div>
       </div>
     );
@@ -193,6 +201,9 @@ export function MyCalendar() {
 
   return (
     <>
+      <Modal isVisible={showModal} onClose={() => setShowModal(false)}>
+        <CalendarPopup onClose={()=>{}} data={modalState}/>
+      </Modal>
       <div className="calendar-controls-container">
         <select
           onChange={(e) => {
@@ -218,8 +229,9 @@ export function MyCalendar() {
           })}
         </select>
         <ModalButton isDefault={false} cssClass="add-button" text="Add">
-            <AddEventForm />
-          </ModalButton>
+          {/* onClose function is provided in the Modal component */}
+          <AddEventForm onClose={() => {}} />
+        </ModalButton>
       </div>
       <Calendar
         localizer={localizer}
@@ -227,6 +239,7 @@ export function MyCalendar() {
         events={dateFormatter(eventList)}
         components={components}
         eventPropGetter={customEventPropGetter}
+        onSelectEvent={onSelectEvent}
       />
     </>
   );

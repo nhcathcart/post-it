@@ -1,4 +1,4 @@
-.event-form-container {
+.add-event-form-container {
   display: flex;
   flex-direction: column;
   align-self: center;
@@ -8,6 +8,7 @@
   width: 80%;
   border: none;
   color: black;
+  z-index: 10000;
 }
 .event-form-input {
   width: 100%;
@@ -28,4 +29,10 @@
   border: 1px solid #ccc;
   font-family: inherit;
   font-size: inherit;
+}
+.modal-close-container{
+  display: flex;
+  width: 100%;
+  justify-content: flex-end;
+  padding-right: 4%;
 }

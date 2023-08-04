@@ -1,0 +1,36 @@
+.modal-close-container{
+  display: flex;
+  width: 100%;
+  justify-content: flex-end;
+}
+.view-event-container {
+    display: flex;
+    flex-direction: column;
+    align-self: center;
+    align-items: center;
+    justify-content: flex-start;
+    height: 90%;
+    width: 80%;
+    border: none;
+    color: black;
+    z-index: 10000;
+  }
+.owner-container {
+  display: flex;
+  flex-direction: column;
+  height: 20%;
+  width: 100%;
+}
+.date-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  height: 20%;
+  width: 100%;
+}
+.notes-container {
+  display: flex;
+  flex-direction: column;
+  height: 20%;
+  width: 100%;
+}

@@ -28,7 +28,8 @@ export default function FriendGroup() {
             cssClass="friend-button"
             text="Create Group"
           >
-            <FriendGroupForm />
+            {/* onClose function is provided in the Modal component */}
+            <FriendGroupForm onClose={()=>{}} /> 
           </ModalButton>
         </div>
         <h3>Friend Groups</h3>
