@@ -45,7 +45,7 @@ export function Navbar() {
         <button
           className="nav-button-full"
           onClick={() => {
-            //Whatever you want the button to do goes here
+            navigate("/")
             toggleFullPageMenu();
           }}
         >
@@ -54,7 +54,7 @@ export function Navbar() {
         <button
           className="nav-button-full"
           onClick={() => {
-            //Whatever you want the button to do goes here
+            navigate("/calendar")
             toggleFullPageMenu();
           }}
         >
@@ -63,7 +63,7 @@ export function Navbar() {
         <button
           className="nav-button-full"
           onClick={() => {
-            //Whatever you want the button to do goes here
+            navigate("/friends")
             toggleFullPageMenu();
           }}
         >
@@ -72,7 +72,7 @@ export function Navbar() {
         <button
           className="nav-button-full"
           onClick={() => {
-            //Whatever you want the button to do goes here
+            dispatch(logoutUser());
             toggleFullPageMenu();
           }}
         >
