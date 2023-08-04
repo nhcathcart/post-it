@@ -1,0 +1,12 @@
+.event-form-container {
+    display: flex;
+    flex-direction: column;
+    align-self: center;
+    align-items: center;
+    justify-content: space-around;
+    height: 90%;
+    width: 80%;
+    border: none;
+    color: black;
+    z-index: 10000;
+  }

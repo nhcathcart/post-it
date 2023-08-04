@@ -17,6 +17,7 @@ import {
   loadFriendsThunk,
 } from "../reducers/friendsReducer";
 import { Modal } from "../components/Modal";
+import CalendarPopup from "./CalendarPopup";
 
 const localizer = momentLocalizer(moment);
 
@@ -29,9 +30,9 @@ export function MyCalendar() {
   const eventList = makeEventList(state.viewChoice);
 
   const [showModal, setShowModal] = useState(false);
-  const [modalState, setModalState] = useState(undefined);
-  function onDoubleClick (calEvent) {
-    console.log(calEvent)
+  const [modalState, setModalState] = useState<CustomEvent | undefined>(undefined);
+  function onDoubleClick (calEvent: CustomEvent) {
+    setModalState(calEvent)
     setShowModal(!showModal)
   }
 
@@ -128,7 +129,8 @@ export function MyCalendar() {
   }
   //function to return event in the calendar component
   function customEvent(event: any) {
-    return <div style={{ width: "100%", height: "100%" }}>{event.title}</div>;
+    console.log(event)
+    return <div style={{ width: "100%", height: "100%" }}>{event.event.username? event.event.username : event.title}</div>;
   }
   //function to return styling for events in the calendar component
   function customEventPropGetter(
@@ -200,7 +202,7 @@ export function MyCalendar() {
   return (
     <>
       <Modal isVisible={showModal} onClose={() => setShowModal(false)}>
-        <AddEventForm onClose={() => {}} />
+        <CalendarPopup onClose={()=>{}} data={modalState}/>
       </Modal>
       <div className="calendar-controls-container">
         <select
