@@ -31,7 +31,7 @@ export function MyCalendar() {
 
   const [showModal, setShowModal] = useState(false);
   const [modalState, setModalState] = useState<CustomEvent | undefined>(undefined);
-  function onDoubleClick (calEvent: CustomEvent) {
+  function onSelectEvent (calEvent: CustomEvent) {
     setModalState(calEvent)
     setShowModal(!showModal)
   }
@@ -239,7 +239,7 @@ export function MyCalendar() {
         events={dateFormatter(eventList)}
         components={components}
         eventPropGetter={customEventPropGetter}
-        onDoubleClickEvent={onDoubleClick}
+        onSelectEvent={onSelectEvent}
       />
     </>
   );

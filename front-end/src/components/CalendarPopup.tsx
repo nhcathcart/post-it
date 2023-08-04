@@ -1,6 +1,7 @@
 import { useAppDispatch, useAppSelector } from "../hooks";
 import "../css/CalendarPopup.css"
 import { CustomEvent } from "../reducers/eventsReducer";
+import DateTimePicker from "react-datetime-picker";
 interface props {
   onClose: Function;
   data: CustomEvent | undefined 
@@ -38,6 +39,16 @@ export default function CalendarPopup({ onClose, data }: props) {
         </button>
       </div>
       <div>{username? username : "me"}</div>
+      <DateTimePicker
+        value={start}
+        disableClock={true}
+        disabled={true}
+      />
+      <DateTimePicker
+        value={end}
+        disableClock={true}
+        disabled={true}
+      />
     </div>
   );
 }
