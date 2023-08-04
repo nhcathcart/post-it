@@ -31,6 +31,16 @@ export default function AddEventForm() {
   const start = state.start;
   const end = state.end;
 
+  function handleSubmit() {
+    if (state.title === "") return alert("The event needs a title");
+    if (!state.start || !state.end)
+      return alert("The event needs a start and end time/date");
+    if (new Date(state.start) > new Date(state.end))
+      return alert("The event start time must be before it ends");
+    dispatch(postEventThunk(state));
+    return;
+  }
+
   return (
     <div className="event-form-container">
       <input
@@ -70,7 +80,7 @@ export default function AddEventForm() {
       <button
         className="button"
         style={{ width: "50%" }}
-        onClick={() => dispatch(postEventThunk(state))}
+        onClick={() => handleSubmit()}
       >
         Add Event
       </button>
