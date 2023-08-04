@@ -12,8 +12,17 @@ import {
 import { v4 as uuid } from "uuid";
 
 export default function FriendGroupForm() {
+
   const dispatch = useAppDispatch();
   const state = useAppSelector((state) => state.friends);
+
+  function handleSubmit(){
+    const { name, friends } = state.newFriendGroup;
+    if (name === "") return alert("The friend group needs a name");
+    if (friends?.length === 0) return alert("The friend group needs at least on friend");
+    dispatch(addFriendGroupThunk(state.newFriendGroup));
+    return
+  }
 
   const newGroupFriends = state.newFriendGroup.friends.map(
     (username: string) => {
@@ -30,13 +39,13 @@ export default function FriendGroupForm() {
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
-              stroke-width="1.5"
+              strokeWidth="1.5"
               stroke="currentColor"
               className="svg-button-icon"
             >
               <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeLinecap="round"
+                strokeLinejoin="round"
                 d="M6 18L18 6M6 6l12 12"
               />
             </svg>
@@ -96,7 +105,7 @@ export default function FriendGroupForm() {
         className="button"
         style={{ width: "50%" }}
         onClick={() => {
-          dispatch(addFriendGroupThunk(state.newFriendGroup));
+          handleSubmit()
         }}
       >
         Create Group
