@@ -14,6 +14,7 @@ import {
   updateResource,
   updateEvents,
   postEventThunk,
+  clearNewEvent,
 } from "../reducers/eventsReducer";
 import moment from "moment";
 
@@ -24,25 +25,56 @@ import moment from "moment";
 //   allDay?: boolean
 //   resource?: any,
 //}
-
-export default function AddEventForm() {
+interface props {
+  onClose: Function;
+}
+export default function AddEventForm({ onClose }: props) {
   const dispatch = useAppDispatch();
   const state = useAppSelector((state) => state.events.newEvent);
   const start = state.start;
   const end = state.end;
 
-  function handleSubmit() {
+  async function handleSubmit() {
     if (state.title === "") return alert("The event needs a title");
     if (!state.start || !state.end)
       return alert("The event needs a start and end time/date");
     if (new Date(state.start) > new Date(state.end))
       return alert("The event start time must be before it ends");
-    dispatch(postEventThunk(state));
+    await dispatch(postEventThunk(state));
+    dispatch(clearNewEvent());
+    onClose();
     return;
   }
-
+  function handleClose() {
+    dispatch(clearNewEvent());
+    onClose();
+    return;
+  }
   return (
     <div className="event-form-container">
+      <div className="modal-close-container">
+        <button
+          className="close-button"
+          onClick={() => {
+            handleClose();
+          }}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth="1"
+            stroke="#ccc"
+            className="close-button-icon"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+      </div>
       <input
         type="text"
         placeholder="Event Title"

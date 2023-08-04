@@ -36,9 +36,25 @@
   background-color: #ffffff;
   z-index: 10000;
 }
-
+.modal-close-container {
+  display: flex;
+  justify-content: flex-end;
+  width: 90%;
+}
+.close-button {
+  background-color: white;
+  border: none;
+  width: fit-content;
+  height: fit-content;
+}
+.close-button-icon {
+  width: 2rem;
+  height: 2rem;
+  display: inline;
+  vertical-align: middle;
+}
 @media (min-width: 1024px) {
-  .modal-content{
+  .modal-content {
     width: 60%;
     height: 80%;
   }

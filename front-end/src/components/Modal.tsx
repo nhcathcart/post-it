@@ -1,10 +1,11 @@
-import { ReactNode } from "react"
+import { ReactElement, ReactNode } from "react";
 import "../css/Modal.css";
+import React from "react";
 
 interface props {
   isVisible: boolean;
   onClose: Function;
-  children: ReactNode;
+  children: ReactElement;
 }
 
 export function Modal({ isVisible, onClose, children }: props) {
@@ -15,13 +16,17 @@ export function Modal({ isVisible, onClose, children }: props) {
     }
   }
 
+  const childWithProps = React.cloneElement(children, {onClose: onClose})
+  
   return (
     <div
       className="modal-wrapper"
       id="modal-wrapper"
       onClick={(e) => handleClose(e)}
     >
-      <div className="modal-content">{children}</div>
+      <div className="modal-content">
+        {childWithProps}
+      </div>
     </div>
   );
 }
