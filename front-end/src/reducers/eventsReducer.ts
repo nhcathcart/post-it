@@ -1,23 +1,28 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { Event } from "react-big-calendar";
-import { getEvents, postEvent, getFriendGroupEvents, getFriendEvents } from "../services/eventsService";
+import {
+  getEvents,
+  postEvent,
+  getFriendGroupEvents,
+  getFriendEvents,
+} from "../services/eventsService";
 import { ReactNode } from "react";
 
 export interface EventAdapter {
-  title: React.ReactNode,
-  start: string | Date,
-  end: string | Date,
-  allDay?: boolean
-  resource?: any,
+  title: React.ReactNode;
+  start: string | Date;
+  end: string | Date;
+  allDay?: boolean;
+  resource?: any;
 }
 
 export interface CustomEvent {
-  title: React.ReactNode,
-  username: string,
-  start: string | Date,
-  end: string | Date,
-  allDay?: boolean
-  resource?: any,
+  title: React.ReactNode;
+  username: string;
+  start: string | Date;
+  end: string | Date;
+  allDay?: boolean;
+  resource?: any;
 }
 type FriendEvents = {
   [username: string]: CustomEvent[]; // Index signature: dynamic keys (usernames) mapped to arrays of EventObjects
@@ -42,14 +47,16 @@ interface EventsStateType {
   newEvent: Event;
 }
 //helper function to format date strings into date objects in event objects
-export function dateFormatter (events: CustomEvent[]){
-  const newEventArray: CustomEvent[] = []
-  if (events?.length){events?.forEach((event) => {
-    const newEvent = Object.assign({}, event)
-    newEvent.start = new Date(event.start)
-    newEvent.end = new Date(event.end)
-    newEventArray.push(newEvent)
-  })}
+export function dateFormatter(events: CustomEvent[]) {
+  const newEventArray: CustomEvent[] = [];
+  if (events?.length) {
+    events?.forEach((event) => {
+      const newEvent = Object.assign({}, event);
+      newEvent.start = new Date(event.start);
+      newEvent.end = new Date(event.end);
+      newEventArray.push(newEvent);
+    });
+  }
   return newEventArray;
 }
 
@@ -63,8 +70,8 @@ export const getEventsThunk = createAsyncThunk(
       // const formattedResponse = dateFormatter(response)
       thunkAPI.dispatch(loadEvents(response));
       return response;
-    } catch(error) {
-       return thunkAPI.rejectWithValue(error);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
     }
   }
 );
@@ -72,27 +79,27 @@ export const getEventsThunk = createAsyncThunk(
 export const getFriendGroupEventsThunk = createAsyncThunk(
   "/api/events/get-friend-group-events",
   async (friendGroup: string, thunkAPI) => {
-    try{
+    try {
       const response = await getFriendGroupEvents(friendGroup);
       // const formattedResponse = dateFormatter(response)
       thunkAPI.dispatch(loadEvents(response));
-    }catch(error) {
-      return thunkAPI.rejectWithValue(error)
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
     }
   }
-)
+);
 export const getFriendEventsThunk = createAsyncThunk(
   "/api/events/get-friend-events",
   async (_, thunkAPI) => {
-    try{
+    try {
       const response = await getFriendEvents();
       // const formattedResponse = dateFormatter(response)
       thunkAPI.dispatch(loadFriendEvents(response));
-    }catch(error) {
-      return thunkAPI.rejectWithValue(error)
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
     }
   }
-)
+);
 export const postEventThunk = createAsyncThunk(
   "/api/events/post-event",
   async (event: Event, thunkAPI) => {
@@ -101,8 +108,8 @@ export const postEventThunk = createAsyncThunk(
       if (response === "There was a problem") throw "Problems posting event";
       thunkAPI.dispatch(updateEvents(event));
       return response;
-    } catch(error) {
-       return thunkAPI.rejectWithValue(error);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
     }
   }
 );
@@ -121,7 +128,7 @@ export const eventsSlice = createSlice({
       state.newEvent.end = action.payload;
     },
     updateAllDay: (state, action) => {
-      state.newEvent.allDay = action.payload
+      state.newEvent.allDay = action.payload;
     },
     updateResource: (state, action) => {
       state.newEvent.resource = action.payload;
@@ -130,14 +137,23 @@ export const eventsSlice = createSlice({
       state.events = state.events.concat(action.payload);
     },
     loadEvents: (state, action) => {
-      state.events = action.payload
+      state.events = action.payload;
     },
     loadFriendEvents: (state, action) => {
-      state.friendEvents = action.payload
+      state.friendEvents = action.payload;
     },
     setViewChoice: (state, action) => {
-      state.viewChoice = action.payload
-    }
+      state.viewChoice = action.payload;
+    },
+    clearNewEvent: (state) => {
+      state.newEvent = {
+        title: "",
+        start: undefined,
+        end: undefined,
+        allDay: false,
+        resource: undefined,
+      };
+    },
   },
 });
 
@@ -151,6 +167,7 @@ export const {
   loadEvents,
   loadFriendEvents,
   setViewChoice,
+  clearNewEvent
 } = eventsSlice.actions;
 
 export default eventsSlice.reducer;

@@ -1,10 +1,10 @@
 import { Modal } from "./Modal";
-import { ReactNode, useState } from "react"
+import { ReactElement, ReactNode, useState } from "react"
 import "../css/Modal.css"
 import "../css/utility-css.css"
 
 
-export function ModalButton(props: { children: ReactNode, isDefault: boolean, text: string, cssClass?: string}) {
+export function ModalButton(props: { children: ReactElement, isDefault: boolean, text: string, cssClass?: string}) {
   const [showModal, setShowModal] = useState(false);
   const { isDefault, cssClass, text } = props;
 

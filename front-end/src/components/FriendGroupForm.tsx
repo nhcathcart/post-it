@@ -1,3 +1,4 @@
+
 import "../css/FriendGroupForm.css";
 import "../css/utility-css.css";
 import { useAppDispatch, useAppSelector } from "../hooks";
@@ -8,22 +9,32 @@ import {
   friendSearchAllThunk,
   removeNewGroupFriend,
   filterViewableFriends,
+  clearNewFriendGroup,
 } from "../reducers/friendsReducer";
 import { v4 as uuid } from "uuid";
 
-export default function FriendGroupForm() {
+interface props {
+  onClose: Function;
+}
+
+export default function FriendGroupForm({ onClose }: props) {
 
   const dispatch = useAppDispatch();
   const state = useAppSelector((state) => state.friends);
 
-  function handleSubmit(){
+  async function handleSubmit(){
     const { name, friends } = state.newFriendGroup;
     if (name === "") return alert("The friend group needs a name");
     if (friends?.length === 0) return alert("The friend group needs at least on friend");
-    dispatch(addFriendGroupThunk(state.newFriendGroup));
+    await dispatch(addFriendGroupThunk(state.newFriendGroup));
+    dispatch(clearNewFriendGroup())
+    onClose()
     return
   }
-
+  function handleClose(){
+    dispatch(clearNewFriendGroup())
+    onClose();
+  }
   const newGroupFriends = state.newFriendGroup.friends.map(
     (username: string) => {
       return (
@@ -75,6 +86,29 @@ export default function FriendGroupForm() {
 
   return (
     <div className="form-container">
+      <div className="modal-close-container">
+          <button
+            className="close-button"
+            onClick={() => {
+              handleClose()
+            }}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth="1"
+              stroke="#ccc"
+              className="close-button-icon"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        </div>
       <div className="form-container-inner">
         <label>Group-Name</label>
         <input

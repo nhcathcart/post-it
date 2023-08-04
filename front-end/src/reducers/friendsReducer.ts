@@ -330,6 +330,9 @@ export const friendsSlice = createSlice({
     },
     loadPins: (state, action) => {
       state.pins = action.payload;
+    },
+    clearNewFriendGroup: (state) => {
+      state.newFriendGroup = { name: "", friends: [] }
     }
   },
 });
@@ -358,6 +361,7 @@ export const {
   updatePinAdd,
   updatePinRemove,
   loadPins,
+  clearNewFriendGroup,
 } = friendsSlice.actions;
 
 export default friendsSlice.reducer;
