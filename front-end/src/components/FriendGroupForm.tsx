@@ -85,8 +85,8 @@ export default function FriendGroupForm({ onClose }: props) {
   });
 
   return (
-    <div className="form-container">
-      <div className="modal-close-container">
+    <>
+    <div className="modal-close-container">
           <button
             className="close-button"
             onClick={() => {
@@ -109,6 +109,8 @@ export default function FriendGroupForm({ onClose }: props) {
             </svg>
           </button>
         </div>
+    <div className="form-container">
+      
       <div className="form-container-inner">
         <label>Group-Name</label>
         <input
@@ -145,5 +147,6 @@ export default function FriendGroupForm({ onClose }: props) {
         Create Group
       </button>
     </div>
+    </>
   );
 }
