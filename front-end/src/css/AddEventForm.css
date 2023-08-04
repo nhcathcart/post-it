@@ -8,6 +8,7 @@
   width: 80%;
   border: none;
   color: black;
+  z-index: 10000;
 }
 .event-form-input {
   width: 100%;
