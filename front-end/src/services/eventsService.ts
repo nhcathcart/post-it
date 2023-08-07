@@ -53,4 +53,19 @@ export async function postEvent(event: Event) {
   const responseParsed = await response.json();
   return responseParsed;
 }
+export async function deleteEvent(eventId: number){
+  const response = await fetch("/api/events/delete-event", {
+    method: "DELETE",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({eventId: eventId})
+  })
+  const responseParsed = await response.json();
+  if (response.status >= 400) {
+    throw new Error("Problems deleteing event");
+  }
+  return responseParsed
+}
 

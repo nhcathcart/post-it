@@ -5,6 +5,7 @@ import {
   postEvent,
   getFriendGroupEvents,
   getFriendEvents,
+  deleteEvent,
 } from "../services/eventsService";
 import { ReactNode } from "react";
 
@@ -17,6 +18,7 @@ export interface EventAdapter {
 }
 
 export interface CustomEvent {
+  id: number;
   title: React.ReactNode;
   username: string;
   start: string | Date;
@@ -113,6 +115,17 @@ export const postEventThunk = createAsyncThunk(
     }
   }
 );
+export const deleteEventThunk = createAsyncThunk(
+  "/api/events/delete-event",
+  async (eventId: number, thunkAPI) => {
+    try {
+      const response = await deleteEvent(eventId)
+      thunkAPI.dispatch(removeEvent(eventId))
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+)
 
 export const eventsSlice = createSlice({
   name: "events",
@@ -138,6 +151,9 @@ export const eventsSlice = createSlice({
     },
     loadEvents: (state, action) => {
       state.events = action.payload;
+    },
+    removeEvent: (state, action) => {
+      state.events = state.events.filter((item) => item.id !== action.payload)
     },
     loadFriendEvents: (state, action) => {
       state.friendEvents = action.payload;
@@ -167,7 +183,8 @@ export const {
   loadEvents,
   loadFriendEvents,
   setViewChoice,
-  clearNewEvent
+  clearNewEvent,
+  removeEvent
 } = eventsSlice.actions;
 
 export default eventsSlice.reducer;

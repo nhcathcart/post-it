@@ -13,6 +13,14 @@ router.post(
     res.json("success");
   }
 );
+router.delete(
+  "/delete-event",
+  authController.checkCookie,
+  eventsController.deleteEvent,
+  (req, res) => {
+    return res.json("SUCCESS");
+  }
+);
 router.get(
   "/get-events",
   authController.checkCookie,

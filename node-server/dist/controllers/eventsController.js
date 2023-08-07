@@ -48,6 +48,34 @@ const eventsController = {
             next(errorObj);
         }
     }),
+    deleteEvent: (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+        const { username } = res.locals;
+        const { eventId } = req.body;
+        const query = `
+    WITH user_info AS (
+      SELECT id AS user_id
+      FROM users
+      WHERE username = $1
+    )
+    DELETE FROM events
+    WHERE user_id = (SELECT user_id FROM user_info) AND id = $2;
+  `;
+        const values = [username, eventId];
+        try {
+            yield db_1.default.query(query, values);
+            return next();
+        }
+        catch (err) {
+            const errorObj = {
+                log: `There was an error in the deleteFriendGroup middleware: ${err}`,
+                status: 500,
+                message: {
+                    err: `There was a problem deleting that friend group`,
+                },
+            };
+            next(errorObj);
+        }
+    }),
     getEvents: (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
         const { username } = res.locals;
         const query = `
@@ -57,6 +85,7 @@ const eventsController = {
             WHERE username = $1
           )
           SELECT
+            id,
             title,
             start_date AS start,
             end_date AS end,
