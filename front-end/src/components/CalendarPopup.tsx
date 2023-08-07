@@ -1,17 +1,29 @@
 import { useAppDispatch, useAppSelector } from "../hooks";
 import "../css/CalendarPopup.css";
-import { CustomEvent } from "../reducers/eventsReducer";
+import { CustomEvent, deleteEventThunk } from "../reducers/eventsReducer";
 import DateTimePicker from "react-datetime-picker";
+
 interface props {
   onClose: Function;
   data: CustomEvent | undefined;
 }
 export default function CalendarPopup({ onClose, data }: props) {
+  
+  const dispatch = useAppDispatch();
   if (!data) return null;
-  const { username, start, end, resource } = data;
+  const { username, start, end, resource, id } = data;
+
   function handleClose() {
     onClose();
     return;
+  }
+  function handleDeleteClick(){
+    if (id){
+      dispatch(deleteEventThunk(id))
+      onClose();
+      return
+    }
+    
   }
   return (
     <>
@@ -54,6 +66,9 @@ export default function CalendarPopup({ onClose, data }: props) {
           <h4>Notes:</h4>
           <p>{resource? resource : "---"}</p>
       </div>
+      {!username ? <div className="delete-container">
+          <button className="danger-button" onClick={()=> handleDeleteClick()}>delete-event</button>
+      </div> : null}
     </div>
     </>
   );

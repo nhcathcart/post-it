@@ -13,6 +13,9 @@ const db = db_1.default;
 router.post("/post-event", authController_1.default.checkCookie, eventsController_1.default.postEvent, (req, res) => {
     res.json("success");
 });
+router.delete("/delete-event", authController_1.default.checkCookie, eventsController_1.default.deleteEvent, (req, res) => {
+    return res.json("SUCCESS");
+});
 router.get("/get-events", authController_1.default.checkCookie, eventsController_1.default.getEvents, (req, res) => {
     res.json(res.locals.events);
 });
