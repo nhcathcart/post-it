@@ -20,7 +20,7 @@ export interface EventAdapter {
 export interface CustomEvent {
   id: number;
   title: React.ReactNode;
-  username: string;
+  username: string | undefined;
   start: string | Date;
   end: string | Date;
   allDay?: boolean;
